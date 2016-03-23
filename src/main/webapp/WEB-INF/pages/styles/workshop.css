@@ -1,0 +1,43 @@
+.workshops {
+    padding: 20px;
+}
+
+.workshop {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #949494;
+    border-radius: 2px;
+    font-size: 0;
+    box-shadow: 0 0 7px 0 #695F5F;
+    background: rgba(235, 243, 223, 0.9);
+}
+
+.workshop__title {
+    margin-bottom: 10px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 25px;
+    color: #000;
+    text-align: center;
+}
+
+.workshop__subtitle {
+    margin-bottom: 10px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 18px;
+    color: #000;
+    text-align: left;
+}
+
+.workshop__left {
+    display: inline-block;
+    vertical-align: top;
+    width: 58%;
+    margin-right: 20px;
+    border-right: 1px solid #888080;
+}
+
+.workshop__right {
+    display: inline-block;
+    vertical-align: top;
+    width: 35%;
+}

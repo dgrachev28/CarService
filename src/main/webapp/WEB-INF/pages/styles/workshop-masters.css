@@ -1,0 +1,30 @@
+.workshop-masters {
+    display: table;
+    margin: 15px;
+}
+
+.workshop-masters__item {
+    display: table-row;
+}
+
+.workshop-masters__item-name {
+    display: table-cell;
+    padding-right: 20px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    color: #3f5271;
+    line-height: 30px;
+}
+
+.workshop-masters__item-work {
+    display: table-cell;
+    padding: 0 10px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    color: #d2261a;
+    font-weight: 700;
+}
+
+.workshop-masters__item-work_free {
+    color: #34b81b;
+}

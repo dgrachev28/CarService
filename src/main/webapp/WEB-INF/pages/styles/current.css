@@ -1,0 +1,14 @@
+.current {
+    margin: 20px;
+    border: 2px solid #4f955e;
+}
+
+.current__title {
+    padding: 10px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 30px;
+    color: #000;
+    text-align: center;
+    border-bottom: 2px solid #4f955e;
+    background: rgba(235, 243, 223, 0.9);
+}

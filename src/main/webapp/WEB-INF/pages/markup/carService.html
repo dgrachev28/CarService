@@ -3,10 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <title>Car Service</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Exo+2:400,400italic,500,600,500italic,700,700italic,600italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../styles/reset.css"/>
+    <link rel="stylesheet" href="../styles/content.css"/>
+    <link rel="stylesheet" href="../styles/current.css"/>
+    <link rel="stylesheet" href="../styles/statistic.css"/>
+    <link rel="stylesheet" href="../styles/workshop.css"/>
+    <link rel="stylesheet" href="../styles/workshop-masters.css"/>
+    <link rel="stylesheet" href="../styles/workshop-queue.css"/>
 </head>
 <body>
 
-<p class="masha"></p>
+<div class="page">
+    <div class="content">
+        <div class="content__left">
+            <div class="current">
+                <div class="current__title">Текущее состояние</div>
+                <ul class="workshops">
+                    <li class="workshop">
+                        <div class="workshop__title">Цех 1: техосмотр</div>
+
+                        <div class="workshop__left">
+                            <div class="workshop__subtitle">Очередь</div>
+                            <ul class="workshop-queue">
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">1</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">2</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">3</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">4</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="workshop__right">
+                            <div class="workshop__subtitle">Мастера</div>
+                            <ul class="workshop-masters">
+                                <li class="workshop-masters__item">
+                                    <span class="workshop-masters__item-name">Денис</span>
+                                    <span class="workshop-masters__item-work">занят</span>
+                                </li>
+                                <li class="workshop-masters__item">
+                                    <span class="workshop-masters__item-name">Максим</span>
+                                    <span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="workshop">
+                        <div class="workshop__title">Цех 2: техосмотр</div>
+
+                        <div class="workshop__left">
+                            <div class="workshop__subtitle">Очередь</div>
+                            <ul class="workshop-queue">
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">1</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">2</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">3</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                                <li class="workshop-queue__item">
+                                    <span class="workshop-queue__item-id">4</span>
+                                    <span class="workshop-queue__item-service">техосмотр</span>
+                                    <span class="workshop-queue__item-date">22.03.2016</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="workshop__right">
+                            <div class="workshop__subtitle">Мастера</div>
+                            <ul class="workshop-masters">
+                                <li class="workshop-masters__item">
+                                    <span class="workshop-masters__item-name">Денис</span>
+                                    <span class="workshop-masters__item-work">занят</span>
+                                </li>
+                                <li class="workshop-masters__item">
+                                    <span class="workshop-masters__item-name">Максим</span>
+                                    <span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="content__right">
+            <div class="statistic">
+                <div class="statistic__title">Статистика</div>
+                <div class="statistic__content">
+                    <div class="statistic__block">
+                        <div class="statistic__param">Число обслуженных автомобилей</div>
+                        <div class="statistic__value">12</div>
+                    </div>
+                    <div class="statistic__block">
+                        <div class="statistic__param">Среднее время обслуживания</div>
+                        <div class="statistic__value">1 час</div>
+                    </div>
+                    <div class="statistic__block">
+                        <div class="statistic__param">Средняя прибыль</div>
+                        <div class="statistic__value">1200.000</div>
+                    </div>
+                    <div class="statistic__big-block">
+                        <div class="statistic__big-block-title">Средняя длина очередей</div>
+                        <div class="statistic__block">
+                            <div class="statistic__param">Цех 1</div>
+                            <div class="statistic__value">2</div>
+                        </div>
+                        <div class="statistic__block">
+                            <div class="statistic__param">Цех 2</div>
+                            <div class="statistic__value">5</div>
+                        </div>
+                        <div class="statistic__block">
+                            <div class="statistic__param">Цех 3</div>
+                            <div class="statistic__value">10</div>
+                        </div>
+                    </div>
+
+                    <div class="statistic__big-block">
+                        <div class="statistic__big-block-title">Средняя зарплата мастеров</div>
+                        <div class="statistic__block">
+                            <div class="statistic__param">Денис</div>
+                            <div class="statistic__value">80.000</div>
+                        </div>
+                        <div class="statistic__block">
+                            <div class="statistic__param">Максим</div>
+                            <div class="statistic__value">100.000</div>
+                        </div>
+                    </div>
+
+                    <div class="statistic__big-block">
+                        <div class="statistic__big-block-title">Общее число услуг</div>
+                        <div class="statistic__block">
+                            <div class="statistic__param">Техосмотр</div>
+                            <div class="statistic__value">18</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="../scripts/jquery.js"></script>
 <script src="../scripts/main.js"></script>
