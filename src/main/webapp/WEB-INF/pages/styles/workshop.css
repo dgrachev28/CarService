@@ -32,7 +32,6 @@
     display: inline-block;
     vertical-align: top;
     width: 58%;
-    margin-right: 20px;
     border-right: 1px solid #888080;
 }
 
@@ -40,4 +39,7 @@
     display: inline-block;
     vertical-align: top;
     width: 35%;
+    padding-left: 20px;
+    margin-left: -1px;
+    border-left: 1px solid #888080;
 }
