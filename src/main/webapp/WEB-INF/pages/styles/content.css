@@ -4,6 +4,7 @@
     background-size: 100%;
     font-size: 0;
     min-width: 980px;
+    height: 100%;
 }
 
 .content__left {
@@ -16,4 +17,32 @@
     display: inline-block;
     vertical-align: top;
     width: 40%;
+}
+
+.content__button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background-image: url("../images/pause_icon.png");
+    background-position: center;
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-color: #fffdb2;
+    border-radius: 3px;
+    border: 1px solid #1f0fa9;
+    box-shadow: 0 0 7px 1px #5c5c5c;
+}
+
+.content__button:hover {
+    top: 8px;
+    left: 8px;
+    width: 54px;
+    height: 54px;
+    background-color: #fffa97;
+}
+
+.content__button_play {
+    background-image: url("../images/play_icon.png");
 }
