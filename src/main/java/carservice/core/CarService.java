@@ -1,6 +1,6 @@
-package com.springapp.mvc.core;
+package carservice.core;
 
-import com.springapp.mvc.controller.ViewController;
+import carservice.controller.ViewController;
 
 import java.util.List;
 

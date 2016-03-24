@@ -11,8 +11,9 @@ $(document).ready(function() {
     // Получение данных с сервера
     function receive() {
         $.ajax({
-            method: 'POST',
+            method: 'GET',
             url: '/getCurrentState',
+            accepts: "application/json; charset=utf-8",
             data: {},
             success: function(data) {
                 updateMainPage(data);

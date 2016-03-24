@@ -1,4 +1,4 @@
-package com.springapp.mvc.core;
+package carservice.core;
 
 import java.util.List;
 
