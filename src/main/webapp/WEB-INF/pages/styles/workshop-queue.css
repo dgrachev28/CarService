@@ -13,28 +13,28 @@
     line-height: 25px;
 }
 
-.workshop-queue__item:nth-child(4n + 1) .workshop-queue__item-id {
+.workshop-queue__item:nth-child(4n + 1) .workshop-queue__item-number {
     background-image: url("../images/car_icon1.png");
 }
 
-.workshop-queue__item:nth-child(4n + 2) .workshop-queue__item-id {
+.workshop-queue__item:nth-child(4n + 2) .workshop-queue__item-number {
     background-image: url("../images/car_icon2.png");
 }
 
-.workshop-queue__item:nth-child(4n + 3) .workshop-queue__item-id {
+.workshop-queue__item:nth-child(4n + 3) .workshop-queue__item-number {
     background-image: url("../images/car_icon3.png");
 }
 
-.workshop-queue__item:nth-child(4n) .workshop-queue__item-id {
+.workshop-queue__item:nth-child(4n) .workshop-queue__item-number {
     background-image: url("../images/car_icon4.png");
 }
 
-.workshop-queue__item-id {
+.workshop-queue__item-number {
     display: table-cell;
-    padding-left: 45px;
+    padding-left: 23px;
     font-weight: 700;
-    font-size: 18px;
-    background-size: auto 25px;
+    font-size: 12px;
+    background-size: auto 15px;
     background-repeat: no-repeat;
     background-position: left center;
 }
