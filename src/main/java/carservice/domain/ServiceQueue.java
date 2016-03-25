@@ -1,9 +1,6 @@
 package carservice.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -12,10 +9,10 @@ public class ServiceQueue {
     @Id
     private Integer id;
 //    private Service service;
-    @Column(name = "queue_start_date")
-    private Date queueStartDate;
-    @Column(name = "auto_id")
-    private String autoId;
+
+    @ManyToOne
+    @JoinColumn(name="car_id")
+    private Client car;
 
     public Integer getId() {
         return id;
@@ -25,19 +22,11 @@ public class ServiceQueue {
         this.id = id;
     }
 
-    public Date getQueueStartDate() {
-        return queueStartDate;
+    public Client getCar() {
+        return car;
     }
 
-    public void setQueueStartDate(Date queueStartDate) {
-        this.queueStartDate = queueStartDate;
-    }
-
-    public String getAutoId() {
-        return autoId;
-    }
-
-    public void setAutoId(String autoId) {
-        this.autoId = autoId;
+    public void setCar(Client car) {
+        this.car = car;
     }
 }

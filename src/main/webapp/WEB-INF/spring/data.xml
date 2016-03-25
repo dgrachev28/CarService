@@ -28,6 +28,7 @@
                 <value>carservice.domain.Workshop</value>
                 <value>carservice.domain.Service</value>
                 <value>carservice.domain.ServiceQueue</value>
+                <value>carservice.domain.Client</value>
             </list>
         </property>
         <property name="hibernateProperties">

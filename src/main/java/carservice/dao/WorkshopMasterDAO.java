@@ -43,7 +43,7 @@ public class WorkshopMasterDAO {
 
     public List<Workshop> getWorkshopList() {
         Session session = this.sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(Workshop.class);
+        Criteria criteria = session.createCriteria(Workshop.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         List<Workshop> workshops = criteria.list();
         session.close();
         return workshops;

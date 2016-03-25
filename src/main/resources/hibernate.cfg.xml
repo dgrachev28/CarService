@@ -9,5 +9,6 @@
         <mapping class="carservice.domain.Workshop" />
         <mapping class="carservice.domain.Service" />
         <mapping class="carservice.domain.ServiceQueue" />
+        <mapping class="carservice.domain.Client" />
     </session-factory>
 </hibernate-configuration>
