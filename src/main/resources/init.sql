@@ -31,3 +31,5 @@ INSERT INTO service SET id = 1, name = "Осмотр двигателя", cost =
 INSERT INTO service SET id = 2, name = "Мойка салона", cost = 500, average_time = 30, workshop_id = 2;
 
 INSERT INTO client SET car_id = "e234ac", queue_start_date = "2016-03-25", busy = 0;
+
+INSERT INTO service_queue SET id = 1, car_id = "e234ac", workshop_id = 1;
