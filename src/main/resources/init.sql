@@ -16,18 +16,18 @@ CREATE TABLE service_queue(id INT NOT NULL, car_id VARCHAR(30) NOT NULL, worksho
 
 
 
-INSERT INTO master SET id = 1, name = "Denis", busy = 0;
+INSERT INTO master SET id = 1, name = "Р”РµРЅРёСЃ", busy = 0;
 INSERT INTO master SET id = 2, name = "Max", busy = 1;
 INSERT INTO master SET id = 3, name = "Vasya", busy = 0;
 
-INSERT INTO workshop SET id = 1, name = "Тех. осмотр";
-INSERT INTO workshop SET id = 2, name = "Мойка";
+INSERT INTO workshop SET id = 1, name = "РўРµС…. РѕСЃРјРѕС‚СЂ";
+INSERT INTO workshop SET id = 2, name = "РњРѕР№РєР°";
 
 INSERT INTO workshop_master SET masters_id = 1, workshop_id = 1;
 INSERT INTO workshop_master SET masters_id = 2, workshop_id = 1;
 INSERT INTO workshop_master SET masters_id = 3, workshop_id = 2;
 
-INSERT INTO service SET id = 1, name = "Осмотр двигателя", cost = 1000, average_time = 50, workshop_id = 1;
-INSERT INTO service SET id = 2, name = "Мойка салона", cost = 500, average_time = 30, workshop_id = 2;
+INSERT INTO service SET id = 1, name = "РћСЃРјРѕС‚СЂ РґРІРёРіР°С‚РµР»СЏ", cost = 1000, average_time = 50, workshop_id = 1;
+INSERT INTO service SET id = 2, name = "РњРѕР№РєР° СЃР°Р»РѕРЅР°", cost = 500, average_time = 30, workshop_id = 2;
 
 INSERT INTO client SET car_id = "e234ac", queue_start_date = "2016-03-25", busy = 0;
