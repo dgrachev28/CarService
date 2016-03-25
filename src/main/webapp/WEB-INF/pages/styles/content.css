@@ -3,20 +3,20 @@
     background-position: top;
     background-size: 100%;
     font-size: 0;
-    min-width: 980px;
+    min-width: 1210px;
     min-height: 1080px;
 }
 
 .content__left {
     display: inline-block;
     vertical-align: top;
-    width: 60%;
+    width: 65%;
 }
 
 .content__right {
     display: inline-block;
     vertical-align: top;
-    width: 40%;
+    width: 35%;
 }
 
 .content__button {

@@ -165,7 +165,7 @@ $(document).ready(function() {
 
         return '<li class="workshop-masters__item" + id="master' + id + '">' +
             '<span class="workshop-masters__item-name">' + name + '</span>' +
-            '<span class="workshop-masters__item-work">' + busyMarkup(busy) + '</span>' +
+            + busyMarkup(busy) +
             '</li>';
 
     }

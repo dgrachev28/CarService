@@ -31,14 +31,14 @@
 .workshop__left {
     display: inline-block;
     vertical-align: top;
-    width: 58%;
+    width: 65%;
     border-right: 1px solid #888080;
 }
 
 .workshop__right {
     display: inline-block;
     vertical-align: top;
-    width: 35%;
+    width: 30%;
     padding-left: 20px;
     margin-left: -1px;
     border-left: 1px solid #888080;

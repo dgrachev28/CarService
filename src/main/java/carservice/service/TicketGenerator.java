@@ -74,4 +74,25 @@ public class TicketGenerator extends Thread {
     private int minutesToMilliSeconds(int minutes) {
         return minutes * 1000 * 60;
     }
+
+
+    private char generateRandomSymbol() {
+        return (char)('А' + new Random().nextInt(32));
+    }
+
+    private int generateRandomNumeral() {
+        return new Random().nextInt(10);
+    }
+
+    private String generateRandomCarId() {
+        String result = "";
+        result += generateRandomSymbol();
+        for(int i = 0; i < 3; ++i) {
+            result += generateRandomNumeral();
+        }
+        for (int i = 0; i < 2; ++i) {
+            result += generateRandomSymbol();
+        }
+        return result;
+    }
 }
