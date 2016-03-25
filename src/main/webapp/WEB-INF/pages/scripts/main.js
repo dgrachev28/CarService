@@ -20,6 +20,7 @@ $(document).ready(function() {
 
     var timerId,
         statisticEmpty,
+        workshopsEmpty,
         $contentButton,
         $workshop;
 
@@ -29,6 +30,7 @@ $(document).ready(function() {
     function initVars() {
 
         statisticEmpty = true;
+        workshopsEmpty = true;
 
         $contentButton = $("." + classes.contentButton);
         $workshop = $("." + classes.workshop);
@@ -64,33 +66,60 @@ $(document).ready(function() {
 
 
     function updateWorkshops(workshops) {
-        var i, j;
+        var i, j, id, markupWorkshop, masters, markupMasters;
 
-        // Removing content
-        $("." + classes.workshopQueueItem).remove();
-        $("." + classes.workshopMastersItem).remove();
+        // Update masters
 
+        if (workshopsEmpty) {
+            workshopsEmpty = false;
 
-
-        if (workshops) {
             for (i = 0; i < workshops.length; ++i) {
-                var id = workshops[i].id;
+                id = workshops[i].id;
 
-                var markupWorkshop = $("#workshop" + id);
+                markupWorkshop = $("#workshop" + id);
 
-                // Update queue
-                var queue = workshops[i].queue;
-                var markupQueue = markupWorkshop.find("." + classes.workshopQueue);
-                for (j = 0; j < queue.length; ++j) {
-                    markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].number, queue[j].service, queue[j].date));
-                }
-
-                //Update masters
-                var masters = workshops[i].masters;
-                var markupMasters = markupWorkshop.find("." + classes.workshopMasters);
+                //Add masters
+                masters = workshops[i].masters;
+                markupMasters = markupWorkshop.find("." + classes.workshopMasters);
                 for (j = 0; j < masters.length; ++j) {
                     markupMasters.append(getMasterMarkup(masters[j].id, masters[j].name, masters[j].busy));
                 }
+            }
+        } else {
+
+            for (i = 0; i < workshops.length; ++i) {
+
+                //Update masters
+                masters = workshops[i].masters;
+                for (j = 0; j < masters.length; ++j) {
+                    if (masters[j].busy) {
+                        $("#master" + masters[j].id).html(
+                            '<span class="workshop-masters__item-name">' + masters[j].name + '</span>' +
+                            '<span class="workshop-masters__item-work">занят</span>'
+                        );
+                    } else {
+                        $("#master" + masters[j].id).html(
+                            '<span class="workshop-masters__item-name">' + masters[j].name + '</span>' +
+                            '<span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>'
+                        );
+                    }
+                }
+            }
+        }
+
+
+        //Update workshops
+
+        for (i = 0; i < workshops.length; ++i) {
+            id = workshops[i].id;
+
+            markupWorkshop = $("#workshop" + id);
+
+            // Update queue
+            var queue = workshops[i].queue;
+            var markupQueue = markupWorkshop.find("." + classes.workshopQueue);
+            for (j = 0; j < queue.length; ++j) {
+                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].number, queue[j].service.name, queue[j].date));
             }
         }
     }
@@ -98,7 +127,7 @@ $(document).ready(function() {
 
 
     function updateStatistic(statistic) {
-        var key, i;
+        var i;
 
         $("#averageTime").html(statistic.averageTime);
         $("#income").html(statistic.income);
