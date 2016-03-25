@@ -1,5 +1,7 @@
 package carservice.service;
 
+import carservice.dao.WorkshopMasterDAO;
+import carservice.domain.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletConfigAware;
@@ -11,6 +13,9 @@ import java.util.Random;
 @Service
 public class TicketGenerator extends Thread {
 
+    @Autowired
+    WorkshopMasterDAO workshopMasterDAO;
+
     public static final int TIME_SCALE = 12 * 30;
 
     private long startTimeMillis;
@@ -20,7 +25,6 @@ public class TicketGenerator extends Thread {
     public static final int RANDOM_INTERVAL_END_MINUTES = 60;
     public static final int RANDOM_PERIOD_MINUTES = RANDOM_INTERVAL_END_MINUTES - RANDOM_INTERVAL_START_MINUTES;
 
-//    private
 
     public void run() {
         try {
@@ -38,24 +42,36 @@ public class TicketGenerator extends Thread {
 
     private void initStartTimeAndDate() {
         startTimeMillis = System.currentTimeMillis();
-        Calendar startDate = Calendar.getInstance();
+        startDate = Calendar.getInstance();
         startDate.set(Calendar.YEAR, 2016);
         startDate.set(Calendar.MONTH, Calendar.JANUARY);
         startDate.set(Calendar.DAY_OF_MONTH, 1);
     }
 
     private void generateTicket() {
+        Client client = new Client();
+        client.setCarId(generateRandomCarId());
+        client.setQueueStartDate(getCurrentDate());
+        client.setBusy(false);
+        workshopMasterDAO.insertClient(client);
+    }
 
+    private String generateRandomCarId() {
+        return "e123ak";
+    }
+
+    private Calendar getCurrentDate() {
+        return startDate;
     }
 
     private int getRandomTicketInterval() {
         int randomValueMinutes = (int) (RANDOM_INTERVAL_START_MINUTES + new Random().nextDouble() * RANDOM_PERIOD_MINUTES);
-        int result = minutesToSeconds(randomValueMinutes) / TIME_SCALE;
+        int result = minutesToMilliSeconds(randomValueMinutes) / TIME_SCALE;
         System.out.println(result);
         return result;
     }
 
-    private int minutesToSeconds(int minutes) {
+    private int minutesToMilliSeconds(int minutes) {
         return minutes * 1000 * 60;
     }
 

@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Client {
@@ -14,7 +12,7 @@ public class Client {
     private String carId;
 
     @Column(name = "queue_start_date")
-    private Date queueStartDate;
+    private Calendar queueStartDate;
 
     private Boolean busy;
 //    private List<Service> services;
@@ -28,11 +26,11 @@ public class Client {
         this.carId = carId;
     }
 
-    public Date getQueueStartDate() {
+    public Calendar getQueueStartDate() {
         return queueStartDate;
     }
 
-    public void setQueueStartDate(Date queueStartDate) {
+    public void setQueueStartDate(Calendar queueStartDate) {
         this.queueStartDate = queueStartDate;
     }
 

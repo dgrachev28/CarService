@@ -89,3 +89,5 @@ INSERT INTO service SET id = 13, name = "капитальный ремонт д�
 
 
 INSERT INTO client SET car_id = "e234ac", queue_start_date = "2016-03-25", busy = 0;
+
+INSERT INTO service_queue SET id = 1, car_id = "e234ac", workshop_id = 1;

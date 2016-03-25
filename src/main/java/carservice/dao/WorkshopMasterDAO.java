@@ -1,10 +1,12 @@
 package carservice.dao;
 
+import carservice.domain.Client;
 import carservice.domain.Master;
 import carservice.domain.Workshop;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -43,9 +45,20 @@ public class WorkshopMasterDAO {
 
     public List<Workshop> getWorkshopList() {
         Session session = this.sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(Workshop.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        Criteria criteria = session.createCriteria(Workshop.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         List<Workshop> workshops = criteria.list();
         session.close();
         return workshops;
+    }
+
+    public void insertClient(Client client) {
+        Transaction tx = null;
+        Session session = this.sessionFactory.openSession();
+        tx = session.beginTransaction();
+        session.save(client);
+        tx.commit();
+        session.close();
     }
 }
