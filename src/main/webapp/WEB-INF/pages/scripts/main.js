@@ -19,6 +19,7 @@ $(document).ready(function() {
 
 
     var timerId,
+        statisticEmpty,
         $contentButton,
         $workshop;
 
@@ -26,6 +27,9 @@ $(document).ready(function() {
 
 
     function initVars() {
+
+        statisticEmpty = true;
+
         $contentButton = $("." + classes.contentButton);
         $workshop = $("." + classes.workshop);
     }
@@ -51,6 +55,15 @@ $(document).ready(function() {
 
 
     function updateContent(data) {
+        if (data) {
+            updateWorkshops(data.workshops);
+            updateStatistic(data.statistic);
+        }
+    }
+
+
+
+    function updateWorkshops(workshops) {
         var i, j;
 
         // Removing content
@@ -59,9 +72,8 @@ $(document).ready(function() {
 
 
 
-        if (data && data.workshops) {
-            var workshops = data.workshops;
-            for (i = 0; workshops && i < workshops.length; ++i) {
+        if (workshops) {
+            for (i = 0; i < workshops.length; ++i) {
                 var id = workshops[i].id;
 
                 var markupWorkshop = $("#workshop" + id);
@@ -83,7 +95,56 @@ $(document).ready(function() {
         }
     }
 
+
+
+    function updateStatistic(statistic) {
+        var key, i;
+
+        $("#averageTime").html(statistic.averageTime);
+        $("#income").html(statistic.income);
+        $("#servedCar").html(statistic.servedCar);
+
+        var queueLength = statistic.queueLength;
+        for (i = 0; i < queueLength.length; ++i) {
+            $("#queueLength" + queueLength[i].id).html(queueLength[i].length);
+        }
+
+        var salaries = statistic.salaries;
+        var servicesNumber = statistic.servicesNumber;
+
+
+        if (statisticEmpty) {
+            statisticEmpty = false;
+
+            for (i = 0; i < salaries.length; ++i) {
+                $("#salaries").append(getStatisticBlockMarkup("masterSalary" + salaries[i].id, salaries[i].name, salaries[i].salary));
+            }
+
+            for (i = 0; i < servicesNumber.length; ++i) {
+                $("#servicesNumber").append(getStatisticBlockMarkup("serviceNumber" + servicesNumber[i].id, servicesNumber[i].name, servicesNumber[i].number));
+            }
+
+        } else {
+            for (i = 0; i < salaries.length; ++i) {
+                $("#masterSalary" + salaries[i].id).html(salaries[i].salary);
+            }
+
+            for (i = 0; i < servicesNumber.length; ++i) {
+                $("#serviceNumber" + servicesNumber[i].id).html(servicesNumber[i].number);
+            }
+        }
+    }
+
+
+
+    function getStatisticBlockMarkup(id, param, value) {
     // Helpers
+        return '<div class="statistic__block">' +
+            '<div class="statistic__param">' + param + '</div>' +
+            '<div class="statistic__value" id="' + id + '">' + value + '</div>' +
+            '</div>';
+    }
+
     function getQueueItemMarkup(id, number, service, date) {
         return '<li class="workshop-queue__item" id="ticket' + id + '">' +
             '<span class="workshop-queue__item-number">' + number + '</span>' +
