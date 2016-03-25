@@ -26,7 +26,7 @@ public class Workshop {
     private List<ServiceQueue> queue;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Master> masters;
+    private Set<Master> masters;
 
     public Integer getId() {
         return id;
@@ -52,11 +52,11 @@ public class Workshop {
         this.services = services;
     }
 
-    public List<Master> getMasters() {
+    public Set<Master> getMasters() {
         return masters;
     }
 
-    public void setMasters(List<Master> masters) {
+    public void setMasters(Set<Master> masters) {
         this.masters = masters;
     }
 
