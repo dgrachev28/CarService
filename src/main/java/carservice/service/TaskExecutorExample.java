@@ -1,8 +1,12 @@
 package carservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 
 public class TaskExecutorExample {
+
+    @Autowired
+    public TicketGenerator ticketGenerator;
 
     private class MessagePrinterTask extends Thread {
 

@@ -144,19 +144,6 @@ $(document).ready(function() {
         });
     }
 
-    function getCurrentState() {
-        $.ajax({
-            method: 'GET',
-            url: '/getCurrentState',
-            accepts: "application/json; charset=utf-8",
-            data: {},
-            success: function(data) {
-                updateContent(data);
-                timerStart();
-            }
-        });
-    }
-
     function init() {
 
         initVars();
@@ -165,7 +152,8 @@ $(document).ready(function() {
 
         startQueueThread();
 
-        getCurrentState();
+        receive();
+        timerStart();
     }
 
 
