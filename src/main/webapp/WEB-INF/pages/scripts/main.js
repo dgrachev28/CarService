@@ -133,6 +133,29 @@ $(document).ready(function() {
     }
 
 
+    function startQueueThread() {
+        $.ajax({
+            method: 'GET',
+            url: '/startQueueThread',
+            data: {},
+            success: function(data) {
+                console.log("Queue generating is started");
+            }
+        });
+    }
+
+    function getCurrentState() {
+        $.ajax({
+            method: 'GET',
+            url: '/getCurrentState',
+            accepts: "application/json; charset=utf-8",
+            data: {},
+            success: function(data) {
+                updateContent(data);
+                timerStart();
+            }
+        });
+    }
 
     function init() {
 
@@ -140,159 +163,10 @@ $(document).ready(function() {
 
         bindEvents();
 
-        updateContent({
-            workshops: [
-                {
-                    id: 3,
-                    queue: [],
-                    masters: [
-                        {
-                            id: 17,
-                            name: "Денис",
-                            busy: false
-                        },
-                        {
-                            id: 9,
-                            name: 'Анна',
-                            busy: true
-                        },
-                        {
-                            id: 7,
-                            name: "Сергей",
-                            busy: true
-                        }
-                    ]
-                },
-                {
-                    id: 1,
-                    queue: [
-                        {
-                            id: 33,
-                            number: "А789ОНР",
-                            service: 'техосмотр',
-                            date: '10:33 24/03'
-                        }
-                    ],
-                    masters: []
-                },
-                {
-                    id: 2,
-                    queue: [
-                        {
-                            id: 1,
-                            number: "Р777ПЕ",
-                            service: 'покраска кузова',
-                            date: '12:46 24/03'
-                        }
-                    ],
-                    masters: []
-                },
-                {
-                    id: 4,
-                    queue: [
-                        {
-                            id: 53,
-                            number: "П411РН",
-                            service: 'ремонт двигателя',
-                            date: '12:46 24/03'
-                        },
-                        {
-                            id: 54,
-                            number: "Н573ТЗ",
-                            service: 'ремонт двигателя',
-                            date: '15:23 24/03'
-                        },
-                        {
-                            id: 55,
-                            number: "П411РН",
-                            service: 'замена масла',
-                            date: '15:48 24/03'
-                        }
-                    ],
-                    masters: []
-                }
-            ]
-        });
+        startQueueThread();
 
-
-        updateContent({
-            workshops: [
-                {
-                    id: 3,
-                    queue: [],
-                    masters: [
-                        {
-                            id: 17,
-                            name: "Денис",
-                            busy: true
-                        },
-                        {
-                            id: 9,
-                            name: 'Анна',
-                            busy: false
-                        },
-                        {
-                            id: 7,
-                            name: "Сергей",
-                            busy: false
-                        }
-                    ]
-                },
-                {
-                    id: 1,
-                    queue: [],
-                    masters: []
-                },
-                {
-                    id: 2,
-                    queue: [
-                        {
-                            id: 1,
-                            number: "Р777ПЕ",
-                            service: 'ремонт кузова',
-                            date: '12:46 24/03'
-                        }
-                    ],
-                    masters: []
-                },
-                {
-                    id: 4,
-                    queue: [
-                        {
-                            id: 53,
-                            number: "П411РН",
-                            service: 'ремонт двигателя',
-                            date: '12:46 24/03'
-                        },
-                        {
-                            id: 54,
-                            number: "Н573ТЗ",
-                            service: 'замена масла',
-                            date: '15:23 24/03'
-                        },
-                        {
-                            id: 55,
-                            number: "П411РН",
-                            service: 'замена масла',
-                            date: '15:48 24/03'
-                        }
-                    ],
-                    masters: []
-                }
-            ]
-        });
-
-
-        //$.ajax({
-        //    method: 'POST',
-        //    url: '/getCurrentState',
-        //    data: {},
-        //    success: function(data) {
-        //        updateContent(data);
-        //    }
-        //});
+        getCurrentState();
     }
-
 
 
     // Начало работы

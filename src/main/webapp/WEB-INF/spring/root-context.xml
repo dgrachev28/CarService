@@ -14,4 +14,17 @@
 
     <!-- Файл с настройками ресурсов для работы с данными (Data Access Resources) -->
     <import resource="data.xml"/>
+
+
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="10" />
+        <property name="queueCapacity" value="25" />
+    </bean>
+
+    <bean id="taskExecutorExample" class="carservice.service.TaskExecutorExample">
+        <constructor-arg ref="taskExecutor" />
+    </bean>
+
+
 </beans>

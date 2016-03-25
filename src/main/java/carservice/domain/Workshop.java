@@ -23,10 +23,10 @@ public class Workshop {
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name="workshop_id")
-    private List<ServiceQueue> serviceQueues;
+    private List<ServiceQueue> queue;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Master> master;
+    private List<Master> masters;
 
     public Integer getId() {
         return id;
@@ -44,19 +44,27 @@ public class Workshop {
         this.name = name;
     }
 
-    public List<Master> getMaster() {
-        return master;
-    }
-
-    public void setMaster(List<Master> master) {
-        this.master = master;
-    }
-
     public Set<Service> getServices() {
         return services;
     }
 
     public void setServices(Set<Service> services) {
         this.services = services;
+    }
+
+    public List<Master> getMasters() {
+        return masters;
+    }
+
+    public void setMasters(List<Master> masters) {
+        this.masters = masters;
+    }
+
+    public List<ServiceQueue> getQueue() {
+        return queue;
+    }
+
+    public void setQueue(List<ServiceQueue> queue) {
+        this.queue = queue;
     }
 }
