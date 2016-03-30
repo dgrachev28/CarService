@@ -6,9 +6,11 @@ import java.util.Date;
 @Entity
 @Table(name="service_queue")
 public class ServiceQueue {
-    @Id
+    @Id @GeneratedValue
     private Integer id;
-//    private Service service;
+
+    @ManyToOne
+    private Service service;
 
     @ManyToOne
     @JoinColumn(name="car_id")
@@ -28,5 +30,13 @@ public class ServiceQueue {
 
     public void setCar(Client car) {
         this.car = car;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
     }
 }

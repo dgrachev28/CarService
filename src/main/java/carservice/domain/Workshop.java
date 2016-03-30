@@ -20,7 +20,7 @@ public class Workshop {
     @JoinColumn(name="workshop_id")
     private Set<Service> services;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name="workshop_id")
     private List<ServiceQueue> queue;

@@ -2,10 +2,12 @@ package carservice.service;
 
 import carservice.dao.WorkshopMasterDAO;
 import carservice.domain.Client;
+import carservice.domain.ServiceQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletConfigAware;
 
+import javax.sound.midi.Sequence;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -29,7 +31,7 @@ public class TicketGenerator extends Thread {
     public void run() {
         try {
             initStartTimeAndDate();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 20; i++) {
 
                 generateTicket();
                 sleep(getRandomTicketInterval());
@@ -54,10 +56,22 @@ public class TicketGenerator extends Thread {
         client.setQueueStartDate(getCurrentDate());
         client.setBusy(false);
         workshopMasterDAO.insertClient(client);
+
+        ServiceQueue serviceQueue = new ServiceQueue();
+        serviceQueue.setCar(client);
+        workshopMasterDAO.insertServiceQueue(serviceQueue);
     }
 
     private String generateRandomCarId() {
-        return "e123ak";
+        String result = "";
+        result += generateRandomSymbol();
+        for(int i = 0; i < 3; ++i) {
+            result += generateRandomNumeral();
+        }
+        for (int i = 0; i < 2; ++i) {
+            result += generateRandomSymbol();
+        }
+        return result;
     }
 
     private Calendar getCurrentDate() {
@@ -84,15 +98,5 @@ public class TicketGenerator extends Thread {
         return new Random().nextInt(10);
     }
 
-    private String generateRandomCarId() {
-        String result = "";
-        result += generateRandomSymbol();
-        for(int i = 0; i < 3; ++i) {
-            result += generateRandomNumeral();
-        }
-        for (int i = 0; i < 2; ++i) {
-            result += generateRandomSymbol();
-        }
-        return result;
-    }
+
 }
