@@ -118,9 +118,14 @@ $(document).ready(function() {
             // Update queue
             var queue = workshops[i].queue;
             var markupQueue = markupWorkshop.find("." + classes.workshopQueue);
+
+            //Clear queues
+            markupQueue.html("");
+
             for (j = 0; j < queue.length; ++j) {
                 var date = new Date(queue[j].car.queueStartDate);
-                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].car.carId, queue[j].service.name, date.customFormat("#D# #MMM# #YYYY#")));
+                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].car.carId, queue[j].service.name,
+                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hh#:#mm#")));
             }
         }
     }
@@ -184,19 +189,17 @@ $(document).ready(function() {
     }
 
     function getMasterMarkup(id, name, busy) {
-        function busyMarkup(busy) {
-            if(busy) {
-                return '<span class="workshop-masters__item-work">занят</span>';
-            } else {
-                return '<span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>';
-            }
+        if(busy) {
+            return '<li class="workshop-masters__item" + id="master' + id + '">' +
+                    '<span class="workshop-masters__item-name">' + name + '</span>' +
+                    '<span class="workshop-masters__item-work">занят</span>' +
+                    '</li>';
+        } else {
+            return '<li class="workshop-masters__item" + id="master' + id + '">' +
+                '<span class="workshop-masters__item-name">' + name + '</span>' +
+                '<span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>' +
+                '</li>';
         }
-
-        return '<li class="workshop-masters__item" + id="master' + id + '">' +
-            '<span class="workshop-masters__item-name">' + name + '</span>' +
-            + busyMarkup(busy) +
-            '</li>';
-
     }
 
 

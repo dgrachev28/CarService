@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletConfigAware;
 
 import javax.sound.midi.Sequence;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -54,7 +55,7 @@ public class TicketGenerator extends Thread {
     private void generateTicket() {
         Client client = new Client();
         client.setCarId(generateRandomCarId());
-        client.setQueueStartDate(getCurrentDate());
+        client.setQueueStartDate(getCurrentDateTime());
         client.setBusy(false);
         workshopMasterDAO.insertClient(client);
 
@@ -89,8 +90,11 @@ public class TicketGenerator extends Thread {
         return result;
     }
 
-    private Calendar getCurrentDate() {
-        return startDate;
+    private Calendar getCurrentDateTime() {
+        long differenceMillis = (System.currentTimeMillis() - startTimeMillis) * TIME_SCALE;
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.setTimeInMillis(startDate.getTimeInMillis() + differenceMillis);
+        return currentDate;
     }
 
     private int getRandomTicketInterval() {
@@ -106,7 +110,8 @@ public class TicketGenerator extends Thread {
 
 
     private char generateRandomSymbol() {
-        return (char) ('А' + new Random().nextInt(32));
+        Character[] possibleLetters = new Character[]{'А', 'В', 'Е', 'К', 'М', 'Н', 'О', 'Р', 'С', 'Т', 'У', 'Х'};
+        return (char) (possibleLetters[new Random().nextInt(possibleLetters.length)]);
     }
 
     private int generateRandomNumeral() {
