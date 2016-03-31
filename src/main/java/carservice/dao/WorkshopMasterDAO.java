@@ -20,8 +20,6 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class WorkshopMasterDAO {
 
-//    @Autowired
-//    private SessionFactory sessionFactory;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -58,23 +56,34 @@ public class WorkshopMasterDAO {
         entityManager.persist(client);
     }
 
-    public void insertServiceQueue(ServiceQueue serviceQueue) {
-        Workshop workshop = (Workshop) entityManager.createQuery("select w from Workshop w").getResultList().get(0);
+    public void insertServiceQueue(int workshopId, ServiceQueue serviceQueue) {
+        Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
+        query.setParameter("workshopId", workshopId);
+        Workshop workshop = (Workshop) query.getSingleResult();
         List<ServiceQueue> queue = workshop.getQueue();
-        for (Service service : workshop.getServices()) {
-            serviceQueue.setService(service);
-            break;
-        }
+//        for (Service service : workshop.getServices()) {
+//            serviceQueue.setService(service);
+//            break;
+//        }
         queue.add(serviceQueue);
         workshop.setQueue(queue);
     }
 
-    public void addClient() {
-        Client client = new Client();
-        client.setBusy(true);
-        client.setCarId("23ed");
-        client.setQueueStartDate(Calendar.getInstance());
-
-        entityManager.persist(client);
+    public Service getServiceById(int id) {
+        Query query = entityManager.createQuery("select s from Service s where s.id = :id");
+        query.setParameter("id", id);
+        return (Service) query.getSingleResult();
     }
+
+
+    public Workshop getWorkshopByService(Service service) {
+        Query query = entityManager.createQuery("select w from Workshop w where :service MEMBER OF w.services");
+        query.setParameter("service", service);
+        return (Workshop) query.getSingleResult();
+    }
+
+    public Long getServicesCount() {
+        return (Long) entityManager.createQuery("select count(s) from Service s").getSingleResult();
+    }
+
 }

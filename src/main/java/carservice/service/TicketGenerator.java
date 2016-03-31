@@ -3,6 +3,7 @@ package carservice.service;
 import carservice.dao.WorkshopMasterDAO;
 import carservice.domain.Client;
 import carservice.domain.ServiceQueue;
+import carservice.domain.Workshop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletConfigAware;
@@ -57,15 +58,29 @@ public class TicketGenerator extends Thread {
         client.setBusy(false);
         workshopMasterDAO.insertClient(client);
 
+        addServiceToQueue(client);
+
+
+    }
+
+    public void addServiceToQueue(Client client) {
         ServiceQueue serviceQueue = new ServiceQueue();
         serviceQueue.setCar(client);
-        workshopMasterDAO.insertServiceQueue(serviceQueue);
+        long servicesCount = workshopMasterDAO.getServicesCount();
+        int servicesCountInt = (int) servicesCount;
+        carservice.domain.Service service = workshopMasterDAO.getServiceById(new Random().nextInt(servicesCountInt) + 1);
+
+        serviceQueue.setService(service);
+        Workshop workshop = workshopMasterDAO.getWorkshopByService(service);
+
+
+        workshopMasterDAO.insertServiceQueue(workshop.getId(), serviceQueue);
     }
 
     private String generateRandomCarId() {
         String result = "";
         result += generateRandomSymbol();
-        for(int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             result += generateRandomNumeral();
         }
         for (int i = 0; i < 2; ++i) {
@@ -91,7 +106,7 @@ public class TicketGenerator extends Thread {
 
 
     private char generateRandomSymbol() {
-        return (char)('А' + new Random().nextInt(32));
+        return (char) ('А' + new Random().nextInt(32));
     }
 
     private int generateRandomNumeral() {
