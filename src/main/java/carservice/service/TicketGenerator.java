@@ -2,28 +2,23 @@ package carservice.service;
 
 import carservice.dao.WorkshopMasterDAO;
 import carservice.domain.Client;
-import carservice.domain.ServiceQueue;
+import carservice.domain.Master;
+import carservice.domain.IncomeTicket;
 import carservice.domain.Workshop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.ServletConfigAware;
 
-import javax.sound.midi.Sequence;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 @Service
 public class TicketGenerator extends Thread {
 
     @Autowired
-    WorkshopMasterDAO workshopMasterDAO;
+    private WorkshopMasterDAO workshopMasterDAO;
 
-    public static final int TIME_SCALE = 12 * 30;
-
-    private long startTimeMillis;
-    private Calendar startDate;
+    @Autowired
+    private SystemTimer systemTimer;
 
     public static final int RANDOM_INTERVAL_START_MINUTES = 15;
     public static final int RANDOM_INTERVAL_END_MINUTES = 60;
@@ -32,8 +27,14 @@ public class TicketGenerator extends Thread {
 
     public void run() {
         try {
-            initStartTimeAndDate();
-            for (int i = 0; i < 20; i++) {
+            systemTimer.initStartDateTime();
+            while (true) {
+                Calendar currentDate = systemTimer.getCurrentDateTime();
+
+                if (currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
+                        currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    sleep(systemTimer.daysToMilliSeconds(2));
+                }
 
                 generateTicket();
                 sleep(getRandomTicketInterval());
@@ -44,38 +45,57 @@ public class TicketGenerator extends Thread {
         }
     }
 
-    private void initStartTimeAndDate() {
-        startTimeMillis = System.currentTimeMillis();
-        startDate = Calendar.getInstance();
-        startDate.set(Calendar.YEAR, 2016);
-        startDate.set(Calendar.MONTH, Calendar.JANUARY);
-        startDate.set(Calendar.DAY_OF_MONTH, 1);
-    }
 
     private void generateTicket() {
         Client client = new Client();
         client.setCarId(generateRandomCarId());
-        client.setQueueStartDate(getCurrentDateTime());
         client.setBusy(false);
         workshopMasterDAO.insertClient(client);
 
-        addServiceToQueue(client);
+        addIncomeTicket(client);
 
 
     }
 
-    public void addServiceToQueue(Client client) {
-        ServiceQueue serviceQueue = new ServiceQueue();
-        serviceQueue.setCar(client);
-        long servicesCount = workshopMasterDAO.getServicesCount();
-        int servicesCountInt = (int) servicesCount;
-        carservice.domain.Service service = workshopMasterDAO.getServiceById(new Random().nextInt(servicesCountInt) + 1);
-
-        serviceQueue.setService(service);
+    public void addIncomeTicket(Client client) {
+        carservice.domain.Service service = generateRandomService();
         Workshop workshop = workshopMasterDAO.getWorkshopByService(service);
 
+        Master freeMaster = getFreeMasterInWorkshop(workshop);
 
-        workshopMasterDAO.insertServiceQueue(workshop.getId(), serviceQueue);
+
+        IncomeTicket incomeTicket = new IncomeTicket();
+        incomeTicket.setClient(client);
+        incomeTicket.setService(service);
+        incomeTicket.setAddQueueDate(systemTimer.getCurrentDateTime());
+        if (freeMaster == null) {
+            incomeTicket.setStatus("InQueue");
+        } else {
+            workshopMasterDAO.setMasterBusy(freeMaster.getId());
+            incomeTicket.setStatus("InProcess");
+            incomeTicket.setMaster(freeMaster);
+            incomeTicket.setStartProcessDate(incomeTicket.getAddQueueDate());
+
+            MasterWorking masterWorking = new MasterWorking(incomeTicket, systemTimer, workshopMasterDAO);
+            masterWorking.start();
+
+        }
+        workshopMasterDAO.insertIncomeTicket(workshop.getId(), incomeTicket);
+
+    }
+
+    private carservice.domain.Service generateRandomService() {
+        int servicesCount = workshopMasterDAO.getServicesCount();
+        return workshopMasterDAO.getServiceById(new Random().nextInt(servicesCount) + 1);
+    }
+
+    private Master getFreeMasterInWorkshop(Workshop workshop) {
+        for (Master master : workshop.getMasters()) {
+            if (!master.getBusy()) {
+                return master;
+            }
+        }
+        return null;
     }
 
     private String generateRandomCarId() {
@@ -90,22 +110,11 @@ public class TicketGenerator extends Thread {
         return result;
     }
 
-    private Calendar getCurrentDateTime() {
-        long differenceMillis = (System.currentTimeMillis() - startTimeMillis) * TIME_SCALE;
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.setTimeInMillis(startDate.getTimeInMillis() + differenceMillis);
-        return currentDate;
-    }
-
     private int getRandomTicketInterval() {
         int randomValueMinutes = (int) (RANDOM_INTERVAL_START_MINUTES + new Random().nextDouble() * RANDOM_PERIOD_MINUTES);
-        int result = minutesToMilliSeconds(randomValueMinutes) / TIME_SCALE;
+        int result = systemTimer.minutesToMilliSeconds(randomValueMinutes) / SystemTimer.TIME_SCALE;
         System.out.println(result);
         return result;
-    }
-
-    private int minutesToMilliSeconds(int minutes) {
-        return minutes * 1000 * 60;
     }
 
 
@@ -117,6 +126,5 @@ public class TicketGenerator extends Thread {
     private int generateRandomNumeral() {
         return new Random().nextInt(10);
     }
-
 
 }

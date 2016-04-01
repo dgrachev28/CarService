@@ -123,9 +123,9 @@ $(document).ready(function() {
             markupQueue.html("");
 
             for (j = 0; j < queue.length; ++j) {
-                var date = new Date(queue[j].car.queueStartDate);
-                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].car.carId, queue[j].service.name,
-                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hh#:#mm#")));
+                var date = new Date(queue[j].addQueueDate);
+                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].client.carId, queue[j].service.name,
+                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#")));
             }
         }
     }

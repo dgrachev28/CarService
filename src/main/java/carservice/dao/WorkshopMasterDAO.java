@@ -1,19 +1,11 @@
 package carservice.dao;
 
 import carservice.domain.*;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.EntityManagerFactoryAccessor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.List;
 
 @Repository
@@ -24,29 +16,6 @@ public class WorkshopMasterDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
-//    public Master getWorkshopMasterById(Integer id) {
-//        Session session = this.sessionFactory.openSession();
-//        Criteria criteria = session.createCriteria(Master.class);
-//        criteria.add(Restrictions.eq("id", id));
-//        List<Master> masters = criteria.list();
-//        session.close();
-//        if (masters.isEmpty()) {
-//            return null;
-//        }
-//        return masters.get(0);
-//    }
-//
-//    public Workshop getWorkshopById(Integer id) {
-//        Session session = this.sessionFactory.openSession();
-//        Criteria criteria = session.createCriteria(Workshop.class);
-//        criteria.add(Restrictions.eq("id", id));
-//        List<Workshop> workshops = criteria.list();
-//        session.close();
-//        if (workshops.isEmpty()) {
-//            return null;
-//        }
-//        return workshops.get(0);
-//    }
 
     public List<Workshop> getWorkshopList() {
         return entityManager.createQuery("select w from Workshop w").getResultList();
@@ -56,16 +25,12 @@ public class WorkshopMasterDAO {
         entityManager.persist(client);
     }
 
-    public void insertServiceQueue(int workshopId, ServiceQueue serviceQueue) {
+    public void insertIncomeTicket(int workshopId, IncomeTicket incomeTicket) {
         Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
         query.setParameter("workshopId", workshopId);
         Workshop workshop = (Workshop) query.getSingleResult();
-        List<ServiceQueue> queue = workshop.getQueue();
-//        for (Service service : workshop.getServices()) {
-//            serviceQueue.setService(service);
-//            break;
-//        }
-        queue.add(serviceQueue);
+        List<IncomeTicket> queue = workshop.getQueue();
+        queue.add(incomeTicket);
         workshop.setQueue(queue);
     }
 
@@ -82,8 +47,15 @@ public class WorkshopMasterDAO {
         return (Workshop) query.getSingleResult();
     }
 
-    public Long getServicesCount() {
-        return (Long) entityManager.createQuery("select count(s) from Service s").getSingleResult();
+    public int getServicesCount() {
+        long servicesCount = (Long) entityManager.createQuery("select count(s) from Service s").getSingleResult();
+        return (int) servicesCount;
+    }
+
+    public void setMasterBusy(int masterId) {
+        Query query = entityManager.createQuery("update Master m set m.busy = true where m.id = :masterId");
+        query.setParameter("masterId", masterId);
+        query.executeUpdate();
     }
 
 }

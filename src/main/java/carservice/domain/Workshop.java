@@ -1,12 +1,10 @@
 package carservice.domain;
 
-import carservice.domain.Master;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
 @Entity
@@ -23,7 +21,7 @@ public class Workshop {
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name="workshop_id")
-    private List<ServiceQueue> queue;
+    private List<IncomeTicket> queue;
 
     @OneToMany(fetch = FetchType.EAGER)
     private Set<Master> masters;
@@ -60,11 +58,11 @@ public class Workshop {
         this.masters = masters;
     }
 
-    public List<ServiceQueue> getQueue() {
+    public List<IncomeTicket> getQueue() {
         return queue;
     }
 
-    public void setQueue(List<ServiceQueue> queue) {
-        this.queue = queue;
+    public void setQueue(List<IncomeTicket> ticketQueue) {
+        this.queue = ticketQueue;
     }
 }

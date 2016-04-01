@@ -8,8 +8,7 @@
         <mapping class="carservice.domain.Master" />
         <mapping class="carservice.domain.Workshop" />
         <mapping class="carservice.domain.Service" />
-        <mapping class="carservice.domain.ServiceQueue" />
+        <mapping class="carservice.domain.IncomeTicket" />
         <mapping class="carservice.domain.Client" />
-        <mapping class="carservice.domain.MasterLog" />
     </session-factory>
 </hibernate-configuration>
