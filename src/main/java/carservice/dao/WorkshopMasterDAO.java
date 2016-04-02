@@ -12,10 +12,8 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class WorkshopMasterDAO {
 
-
     @PersistenceContext
     private EntityManager entityManager;
-
 
     public List<Workshop> getWorkshopList() {
         return entityManager.createQuery("select w from Workshop w").getResultList();

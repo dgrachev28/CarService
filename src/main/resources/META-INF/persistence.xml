@@ -4,6 +4,7 @@
              version="2.0">
     <persistence-unit name="mysql">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
+<<<<<<< HEAD
         <class>carservice.domain.Master</class>
         <class>carservice.domain.Workshop</class>
         <class>carservice.domain.Service</class>
@@ -11,9 +12,9 @@
         <class>carservice.domain.Client</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-            <property name="hibernate.connection.password" value="admin"/>
+            <property name="hibernate.connection.password" value="ltybC555"/>
             <property name="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/carservice"/>
-            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.username" value="carservice"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.hbm2ddl.import_files" value="/init.sql"/>
