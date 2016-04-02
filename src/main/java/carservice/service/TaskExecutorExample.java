@@ -8,28 +8,13 @@ public class TaskExecutorExample {
     @Autowired
     public TicketGenerator ticketGenerator;
 
-    private class MessagePrinterTask extends Thread {
-
-        private String message;
-
-        public MessagePrinterTask(String message) {
-            this.message = message;
-        }
-
-        public void run() {
-            ticketGenerator.run();
-
-        }
-
-    }
-
     private TaskExecutor taskExecutor;
 
     public TaskExecutorExample(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 
-    public void printMessages() {
+    public void startGeneratingTickets() {
         taskExecutor.execute(ticketGenerator);
     }
 }

@@ -118,9 +118,14 @@ $(document).ready(function() {
             // Update queue
             var queue = workshops[i].queue;
             var markupQueue = markupWorkshop.find("." + classes.workshopQueue);
+
+            //Clear queues
+            markupQueue.html("");
+
             for (j = 0; j < queue.length; ++j) {
-                var date = new Date(queue[j].car.queueStartDate);
-                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].car.carId, queue[j].service.name, date.customFormat("#D# #MMM# #YYYY#")));
+                var date = new Date(queue[j].addQueueDate);
+                markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].client.carId, queue[j].service.name,
+                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), queue[j].status));
             }
         }
     }
@@ -131,8 +136,8 @@ $(document).ready(function() {
         var i;
 
         $("#averageTime").html(statistic.averageTime);
-        $("#income").html(statistic.income);
-        $("#servedCar").html(statistic.servedCar);
+        $("#profit").html(statistic.profit);
+        $("#servedCar").html(statistic.servedCarCount);
 
         var queueLength = statistic.queueLength;
         for (i = 0; i < queueLength.length; ++i) {
@@ -175,8 +180,16 @@ $(document).ready(function() {
             '</div>';
     }
 
-    function getQueueItemMarkup(id, number, service, date) {
-        return '<li class="workshop-queue__item" id="ticket' + id + '">' +
+    function getStatusMarkup(status) {
+        if (status == "InProcess") {
+            return 'workshop-queue__item_processing';
+        } else {
+            return '';
+        }
+    }
+
+    function getQueueItemMarkup(id, number, service, date, status) {
+        return '<li class="workshop-queue__item ' + getStatusMarkup(status) + ' id="ticket' + id + '">' +
             '<span class="workshop-queue__item-number">' + number + '</span>' +
             '<span class="workshop-queue__item-service">' + service + '</span>' +
             '<span class="workshop-queue__item-date">' + date + '</span>' +
@@ -184,19 +197,17 @@ $(document).ready(function() {
     }
 
     function getMasterMarkup(id, name, busy) {
-        function busyMarkup(busy) {
-            if(busy) {
-                return '<span class="workshop-masters__item-work">занят</span>';
-            } else {
-                return '<span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>';
-            }
+        if(busy) {
+            return '<li class="workshop-masters__item" + id="master' + id + '">' +
+                    '<span class="workshop-masters__item-name">' + name + '</span>' +
+                    '<span class="workshop-masters__item-work">занят</span>' +
+                    '</li>';
+        } else {
+            return '<li class="workshop-masters__item" + id="master' + id + '">' +
+                '<span class="workshop-masters__item-name">' + name + '</span>' +
+                '<span class="workshop-masters__item-work workshop-masters__item-work_free">свободен</span>' +
+                '</li>';
         }
-
-        return '<li class="workshop-masters__item" + id="master' + id + '">' +
-            '<span class="workshop-masters__item-name">' + name + '</span>' +
-            + busyMarkup(busy) +
-            '</li>';
-
     }
 
 

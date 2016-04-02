@@ -11,12 +11,8 @@ public class Client {
     @Column(name = "car_id")
     private String carId;
 
-    @Column(name = "queue_start_date")
-    private Calendar queueStartDate;
-
     private Boolean busy;
 //    private List<Service> services;
-
 
     public String getCarId() {
         return carId;
@@ -24,14 +20,6 @@ public class Client {
 
     public void setCarId(String carId) {
         this.carId = carId;
-    }
-
-    public Calendar getQueueStartDate() {
-        return queueStartDate;
-    }
-
-    public void setQueueStartDate(Calendar queueStartDate) {
-        this.queueStartDate = queueStartDate;
     }
 
     public Boolean getBusy() {

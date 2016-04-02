@@ -1,64 +1,82 @@
 package carservice.dao;
 
-import carservice.domain.Client;
-import carservice.domain.Master;
-import carservice.domain.Workshop;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
+import carservice.domain.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Repository
+@Transactional(propagation = Propagation.REQUIRED)
 public class WorkshopMasterDAO {
 
-    @Autowired
-    private SessionFactory sessionFactory;
 
-    public Master getWorkshopMasterById(Integer id) {
-        Session session = this.sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(Master.class);
-        criteria.add(Restrictions.eq("id", id));
-        List<Master> masters = criteria.list();
-        session.close();
-        if (masters.isEmpty()) {
-            return null;
-        }
-        return masters.get(0);
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public Workshop getWorkshopById(Integer id) {
-        Session session = this.sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(Workshop.class);
-        criteria.add(Restrictions.eq("id", id));
-        List<Workshop> workshops = criteria.list();
-        session.close();
-        if (workshops.isEmpty()) {
-            return null;
-        }
-        return workshops.get(0);
-    }
 
     public List<Workshop> getWorkshopList() {
-        Session session = this.sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(Workshop.class);
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        List<Workshop> workshops = criteria.list();
-        session.close();
-        return workshops;
+        return entityManager.createQuery("select w from Workshop w").getResultList();
     }
 
     public void insertClient(Client client) {
-        Transaction tx = null;
-        Session session = this.sessionFactory.openSession();
-        tx = session.beginTransaction();
-        session.save(client);
-        tx.commit();
-        session.close();
+        entityManager.persist(client);
     }
+
+    public void insertIncomeTicket(int workshopId, IncomeTicket incomeTicket) {
+        Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
+        query.setParameter("workshopId", workshopId);
+        Workshop workshop = (Workshop) query.getSingleResult();
+        List<IncomeTicket> queue = workshop.getQueue();
+        queue.add(incomeTicket);
+        workshop.setQueue(queue);
+    }
+
+    public Service getServiceById(int id) {
+        Query query = entityManager.createQuery("select s from Service s where s.id = :id");
+        query.setParameter("id", id);
+        return (Service) query.getSingleResult();
+    }
+
+
+    public Workshop getWorkshopByService(Service service) {
+        Query query = entityManager.createQuery("select w from Workshop w where :service MEMBER OF w.services");
+        query.setParameter("service", service);
+        return (Workshop) query.getSingleResult();
+    }
+
+    public int getServicesCount() {
+        long servicesCount = (Long) entityManager.createQuery("select count(s) from Service s").getSingleResult();
+        return (int) servicesCount;
+    }
+
+    public void setMasterBusy(int masterId) {
+        Query query = entityManager.createQuery("update Master m set m.busy = true where m.id = :masterId");
+        query.setParameter("masterId", masterId);
+        query.executeUpdate();
+    }
+
+    public int getServicesSumCost() {
+        String queryText = "select SUM(t.service.cost) from IncomeTicket t where t.status not like 'InQueue'";
+        long servicesSumCost = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) servicesSumCost;
+    }
+
+    public int getAverageQueueAndProcessingTime() {
+        String queryText = "select AVG(t.finishProcessDate - t.addQueueDate) from IncomeTicket t where t.status like 'Complete'";
+        long time = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) time;
+    }
+
+    public int getServedCarCount() {
+        String queryText = "select COUNT(t.client) from IncomeTicket t where t.status like 'Complete' group by t.client";
+        long carCount = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) carCount;
+    }
+
 }
