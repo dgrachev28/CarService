@@ -1,16 +1,10 @@
 package carservice.service;
 
-import carservice.dao.WorkshopMasterDAO;
-import carservice.domain.Client;
+import carservice.dao.IncomeTicketDAO;
+import carservice.dao.MasterDAO;
+import carservice.dao.WorkshopDAO;
 import carservice.domain.IncomeTicket;
-import carservice.domain.Master;
-import carservice.domain.Workshop;
-import com.mysql.jdbc.jdbc2.optional.SuspendableXAConnection;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.SystemEnvironmentPropertySource;
-import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.Random;
 
 public class MasterWorking extends Thread {
@@ -19,15 +13,21 @@ public class MasterWorking extends Thread {
 
     private SystemTimer systemTimer;
 
-    private WorkshopMasterDAO workshopMasterDAO;
+    private WorkshopDAO workshopDAO;
+    private IncomeTicketDAO incomeTicketDAO;
+    private MasterDAO masterDAO;
+
 
     public static final int RUN_TIME_DEFLECTION_PERCENTS = 20;
 
 
-    public MasterWorking(IncomeTicket incomeTicket, SystemTimer systemTimer, WorkshopMasterDAO workshopMasterDAO) {
+    public MasterWorking(IncomeTicket incomeTicket, SystemTimer systemTimer, WorkshopDAO workshopDAO,
+                         IncomeTicketDAO incomeTicketDAO, MasterDAO masterDAO) {
         this.incomeTicket = incomeTicket;
         this.systemTimer = systemTimer;
-        this.workshopMasterDAO = workshopMasterDAO;
+        this.workshopDAO = workshopDAO;
+        this.incomeTicketDAO = incomeTicketDAO;
+        this.masterDAO = masterDAO;
     }
 
     public void run() {
@@ -51,6 +51,15 @@ public class MasterWorking extends Thread {
     }
 
     private void finishProcessService() {
+        incomeTicketDAO.setTicketStatus(incomeTicket.getId(), "Complete");
+        int ticketsInQueueCount = incomeTicketDAO.getTicketsInQueueCount();
+        if (ticketsInQueueCount == 0) {
+            masterDAO.setMasterBusy(incomeTicket.getMaster().getId(), false);
+        } else {
+            IncomeTicket firstTicket = incomeTicketDAO.getFirstTicketInQueue();
+            incomeTicketDAO.setTicketMaster(firstTicket.getId(), incomeTicket.getMaster());
+            incomeTicketDAO.setTicketStatus(firstTicket.getId(), "InProcess");
+        }
         // TODO: обновить статус текущего тикета на Complete
         // TODO: если очередь пустая, то master.busy = false
         // TODO: иначе берем первый в очереди тикет и firstTicket.master = master; firstTicket.status = "InProcess"

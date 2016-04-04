@@ -1,6 +1,6 @@
 package carservice.controller;
 
-import carservice.dao.WorkshopMasterDAO;
+import carservice.dao.WorkshopDAO;
 import carservice.domain.*;
 import carservice.service.TaskExecutorExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Класс ответственный за отправку данных в модуль отображения данных
@@ -21,7 +17,7 @@ import java.util.Random;
 public class ViewController {
 
     @Autowired
-    public WorkshopMasterDAO workshopMasterDAO;
+    public WorkshopDAO workshopDAO;
 
     @Autowired
     public TaskExecutorExample taskExecutorExample;
@@ -31,7 +27,7 @@ public class ViewController {
     public CarService getCurrentState() {
 
         CarService carService = new CarService();
-        carService.setWorkshops(workshopMasterDAO.getWorkshopList());
+        carService.setWorkshops(workshopDAO.getWorkshopList());
         return carService;
     }
 

@@ -1,6 +1,6 @@
 package carservice.service;
 
-import carservice.dao.WorkshopMasterDAO;
+import carservice.dao.*;
 import carservice.domain.Client;
 import carservice.domain.Master;
 import carservice.domain.IncomeTicket;
@@ -15,7 +15,15 @@ import java.util.Random;
 public class TicketGenerator extends Thread {
 
     @Autowired
-    private WorkshopMasterDAO workshopMasterDAO;
+    private WorkshopDAO workshopDAO;
+    @Autowired
+    private IncomeTicketDAO incomeTicketDAO;
+    @Autowired
+    private ServiceDAO serviceDAO;
+    @Autowired
+    private MasterDAO masterDAO;
+    @Autowired
+    private ClientDAO clientDAO;
 
     @Autowired
     private SystemTimer systemTimer;
@@ -50,7 +58,7 @@ public class TicketGenerator extends Thread {
         Client client = new Client();
         client.setCarId(generateRandomCarId());
         client.setBusy(false);
-        workshopMasterDAO.insertClient(client);
+        clientDAO.insertClient(client);
 
         addIncomeTicket(client);
 
@@ -59,7 +67,7 @@ public class TicketGenerator extends Thread {
 
     public void addIncomeTicket(Client client) {
         carservice.domain.Service service = generateRandomService();
-        Workshop workshop = workshopMasterDAO.getWorkshopByService(service);
+        Workshop workshop = workshopDAO.getWorkshopByService(service);
 
         Master freeMaster = getFreeMasterInWorkshop(workshop);
 
@@ -71,22 +79,22 @@ public class TicketGenerator extends Thread {
         if (freeMaster == null) {
             incomeTicket.setStatus("InQueue");
         } else {
-            workshopMasterDAO.setMasterBusy(freeMaster.getId());
+            masterDAO.setMasterBusy(freeMaster.getId(), true);
             incomeTicket.setStatus("InProcess");
             incomeTicket.setMaster(freeMaster);
             incomeTicket.setStartProcessDate(incomeTicket.getAddQueueDate());
 
-            MasterWorking masterWorking = new MasterWorking(incomeTicket, systemTimer, workshopMasterDAO);
+            MasterWorking masterWorking = new MasterWorking(incomeTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
             masterWorking.start();
 
         }
-        workshopMasterDAO.insertIncomeTicket(workshop.getId(), incomeTicket);
+        incomeTicketDAO.insertIncomeTicket(workshop.getId(), incomeTicket);
 
     }
 
     private carservice.domain.Service generateRandomService() {
-        int servicesCount = workshopMasterDAO.getServicesCount();
-        return workshopMasterDAO.getServiceById(new Random().nextInt(servicesCount) + 1);
+        int servicesCount = serviceDAO.getServicesCount();
+        return serviceDAO.getServiceById(new Random().nextInt(servicesCount) + 1);
     }
 
     private Master getFreeMasterInWorkshop(Workshop workshop) {
