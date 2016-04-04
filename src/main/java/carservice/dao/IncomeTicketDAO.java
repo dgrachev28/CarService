@@ -54,5 +54,26 @@ public class IncomeTicketDAO {
         return (IncomeTicket) entityManager.createQuery(queryText).getSingleResult();
     }
 
+    public int getServicesSumCost() {
+        String queryText = "select SUM(t.service.cost) from IncomeTicket t where t.status not like 'InQueue'";
+        long servicesSumCost = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) servicesSumCost;
+    }
+
+    public int getAverageQueueAndProcessingTime() {
+        String queryText = "select AVG(t.finishProcessDate - t.addQueueDate) from IncomeTicket t where t.status like 'Complete'";
+        long time = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) time;
+    }
+
+    public int getServedCarCount() {
+        String queryText = "select COUNT(t.client) from IncomeTicket t where t.status like 'Complete' group by t.client";
+        long carCount = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) carCount;
+    }
+
 
 }
