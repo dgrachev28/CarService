@@ -125,7 +125,7 @@ $(document).ready(function() {
             for (j = 0; j < queue.length; ++j) {
                 var date = new Date(queue[j].addQueueDate);
                 markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].client.carId, queue[j].service.name,
-                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#")));
+                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), queue[j].status));
             }
         }
     }
@@ -136,8 +136,8 @@ $(document).ready(function() {
         var i;
 
         $("#averageTime").html(statistic.averageTime);
-        $("#income").html(statistic.income);
-        $("#servedCar").html(statistic.servedCar);
+        $("#profit").html(statistic.profit);
+        $("#servedCar").html(statistic.servedCarCount);
 
         var queueLength = statistic.queueLength;
         for (i = 0; i < queueLength.length; ++i) {
@@ -180,8 +180,16 @@ $(document).ready(function() {
             '</div>';
     }
 
-    function getQueueItemMarkup(id, number, service, date) {
-        return '<li class="workshop-queue__item" id="ticket' + id + '">' +
+    function getStatusMarkup(status) {
+        if (status == "InProcess") {
+            return 'workshop-queue__item_processing';
+        } else {
+            return '';
+        }
+    }
+
+    function getQueueItemMarkup(id, number, service, date, status) {
+        return '<li class="workshop-queue__item ' + getStatusMarkup(status) + ' id="ticket' + id + '">' +
             '<span class="workshop-queue__item-number">' + number + '</span>' +
             '<span class="workshop-queue__item-service">' + service + '</span>' +
             '<span class="workshop-queue__item-date">' + date + '</span>' +

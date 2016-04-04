@@ -2,6 +2,7 @@ package carservice.controller;
 
 import carservice.dao.WorkshopDAO;
 import carservice.domain.*;
+import carservice.service.StatisticsService;
 import carservice.service.TaskExecutorExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +23,16 @@ public class ViewController {
     @Autowired
     public TaskExecutorExample taskExecutorExample;
 
+    @Autowired
+    public StatisticsService statisticsService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/getCurrentState", produces = "application/json")
     @ResponseBody
     public CarService getCurrentState() {
-
+        Statistics statistics = statisticsService.getStatistics();
         CarService carService = new CarService();
         carService.setWorkshops(workshopDAO.getWorkshopList());
+        carService.setStatistics(statistics);
         return carService;
     }
 

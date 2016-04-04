@@ -13,6 +13,10 @@
     line-height: 25px;
 }
 
+.workshop-queue__item_processing {
+    color: #0ea60b;
+}
+
 .workshop-queue__item:nth-child(4n + 1) .workshop-queue__item-number {
     background-image: url("../images/car_icon1.png");
 }

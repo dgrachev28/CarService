@@ -4,6 +4,12 @@
              version="2.0">
     <persistence-unit name="mysql">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
+<<<<<<< HEAD
+        <class>carservice.domain.Master</class>
+        <class>carservice.domain.Workshop</class>
+        <class>carservice.domain.Service</class>
+        <class>carservice.domain.IncomeTicket</class>
+        <class>carservice.domain.Client</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.password" value="ltybC555"/>
