@@ -59,7 +59,7 @@ $(document).ready(function() {
     function updateContent(data) {
         if (data) {
             updateWorkshops(data.workshops);
-            updateStatistic(data.statistic);
+            updateStatistics(data.statistics);
         }
     }
 
@@ -132,24 +132,24 @@ $(document).ready(function() {
 
 
 
-    function updateStatistic(statistic) {
+    function updateStatistics(statistics) {
         var i;
 
-        $("#averageTime").html(statistic.averageTime);
-        $("#profit").html(statistic.profit);
-        $("#servedCar").html(statistic.servedCarCount);
+        $("#averageTime").html(statistics.averageTime);
+        $("#profit").html(statistics.profit);
+        $("#servedCar").html(statistics.servedCarCount);
 
-        var queueLength = statistic.queueLength;
+        var queueLength = statistics.queueLength;
         for (i = 0; i < queueLength.length; ++i) {
             $("#queueLength" + queueLength[i].id).html(queueLength[i].length);
         }
 
-        var salaries = statistic.salaries;
-        var servicesNumber = statistic.servicesNumber;
+        var salaries = statistics.salaries;
+        var servicesNumber = statistics.servicesNumber;
 
 
-        if (statisticEmpty) {
-            statisticEmpty = false;
+        if (statisticsEmpty) {
+            statisticsEmpty = false;
 
             for (i = 0; i < salaries.length; ++i) {
                 $("#salaries").append(getStatisticBlockMarkup("masterSalary" + salaries[i].id, salaries[i].name, salaries[i].salary));
