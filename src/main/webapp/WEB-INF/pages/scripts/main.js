@@ -13,7 +13,7 @@ $(document).ready(function() {
 
 
     var constants = {
-        TIMER_DELAY: 5000
+        TIMER_DELAY: 2000
     };
 
 

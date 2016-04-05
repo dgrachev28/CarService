@@ -30,4 +30,11 @@ public class ServiceDAO {
         return (int) result;
     }
 
+    public int getServicesSumCost() {
+        String queryText = "select SUM(t.service.cost) from IncomeTicket t where t.status not like 'InQueue'";
+        long servicesSumCost = (Long) entityManager.
+                createQuery(queryText).getSingleResult();
+        return (int) servicesSumCost;
+    }
+
 }

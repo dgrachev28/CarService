@@ -32,6 +32,15 @@ public class ViewController {
         Statistics statistics = statisticsService.getStatistics();
         CarService carService = new CarService();
         carService.setWorkshops(workshopDAO.getWorkshopList());
+        for (Workshop workshop : carService.getWorkshops()) {
+            for (IncomeTicket ticket : workshop.getQueue()) {
+                if (ticket.getStatus() == "Complete") {
+                    workshop.getQueue().remove(ticket);
+                }
+            }
+        }
+
+
         carService.setStatistics(statistics);
         return carService;
     }

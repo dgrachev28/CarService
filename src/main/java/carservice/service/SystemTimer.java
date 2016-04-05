@@ -8,7 +8,7 @@ import java.util.Calendar;
 @Service
 public class SystemTimer {
 
-    public static final int TIME_SCALE = 12 * 30 * 5;
+    public static final int TIME_SCALE = 12 * 30;
 
     private long startTimeMillis;
     private Calendar startDate;
