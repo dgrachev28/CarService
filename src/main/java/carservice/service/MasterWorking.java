@@ -64,9 +64,6 @@ public class MasterWorking extends Thread {
             MasterWorking masterWorking = new MasterWorking(firstTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
             masterWorking.run();
         }
-        // TODO: обновить статус текущего тикета на Complete
-        // TODO: если очередь пустая, то master.busy = false
-        // TODO: иначе берем первый в очереди тикет и firstTicket.master = master; firstTicket.status = "InProcess"
     }
 
 

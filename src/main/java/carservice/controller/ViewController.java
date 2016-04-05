@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Класс ответственный за отправку данных в модуль отображения данных
  */
@@ -33,11 +36,19 @@ public class ViewController {
         CarService carService = new CarService();
         carService.setWorkshops(workshopDAO.getWorkshopList());
         for (Workshop workshop : carService.getWorkshops()) {
+            List<IncomeTicket> completeTickets = new ArrayList<IncomeTicket>();
+
             for (IncomeTicket ticket : workshop.getQueue()) {
-                if (ticket.getStatus() == "Complete") {
-                    workshop.getQueue().remove(ticket);
+                if (ticket.getStatus().equals("Complete")) {
+                    completeTickets.add(ticket);
                 }
             }
+
+            for (IncomeTicket ticket : completeTickets) {
+                workshop.getQueue().remove(ticket);
+            }
+
+
         }
 
 

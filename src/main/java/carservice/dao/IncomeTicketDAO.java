@@ -68,7 +68,7 @@ public class IncomeTicketDAO {
     }
 
     public int getServedCarCount() {
-        String queryText = "select count(t.client) from IncomeTicket t where t.status like 'Complete' group by t.client";
+        String queryText = "select count(t.client) from IncomeTicket t where t.status like 'Complete'";
         long carCount = (Long) entityManager.createQuery(queryText).getSingleResult();
         return (int) carCount;
     }
