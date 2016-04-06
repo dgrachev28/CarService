@@ -11,10 +11,12 @@
     display: inline-block;
     vertical-align: top;
     width: 65%;
+    margin-top: 85px;
 }
 
 .content__right {
     display: inline-block;
     vertical-align: top;
     width: 35%;
+    margin-top: 85px;
 }

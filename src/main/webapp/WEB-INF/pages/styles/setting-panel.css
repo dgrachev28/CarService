@@ -1,24 +1,44 @@
 .setting-panel {
+    position: fixed;
     width: 100%;
-    padding: 20px 60px;
+    padding: 20px 20px 0;
+    border-bottom: 1px solid #636363;
+    box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.8);
+    background-color: rgba(236, 231, 206, 1);
+    white-space: nowrap;
 }
 
 .setting-panel__button {
     display: inline-block;
     vertical-align: top;
-    padding: 10px 15px;
+    padding: 10px 55px;
     border: 1px solid #9a35b6;
     background-color: #a420ea;
-    border-radius: 2px;
+    border-radius: 3px 3px 0 0;
     color: #fdfdfd;
     text-transform: uppercase;
     font-size: 15px;
     font-family: monospace;
     font-weight: 700;
-    box-shadow: 0 0 4px 1px rgba(150, 150, 150, 0.8);
     cursor: pointer;
 }
 
+.setting-panel__button:hover {
+    background-color: #8019b6;
+}
+
 .setting-panel__button + .setting-panel__button {
-    margin-left: 60px;
+    margin-left: 2px;
+}
+
+.setting-panel__time {
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+    padding-right: 60px;
+    font-size: 25px;
+    font-weight: 700;
+    font-family: sans-serif;
+    word-spacing: 10px;
+    color: #4E037D;
 }
