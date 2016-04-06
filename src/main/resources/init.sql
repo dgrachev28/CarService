@@ -85,3 +85,5 @@ INSERT INTO service SET id = 10, name = "замена опоры двигателя", cost = 2000, a
 INSERT INTO service SET id = 11, name = "замена масла", cost = 600, average_time = 20, workshop_id = 4;
 INSERT INTO service SET id = 12, name = "регулировка клапанов", cost = 500, average_time = 20, workshop_id = 4;
 INSERT INTO service SET id = 13, name = "капитальный ремонт двигателя", cost = 4000, average_time = 180, workshop_id = 4;
+
+INSERT INTO systemstate SET status = "RUNNING";

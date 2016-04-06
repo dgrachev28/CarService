@@ -15,7 +15,6 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class ServiceDAO {
 
-
     @PersistenceContext
     private EntityManager entityManager;
 

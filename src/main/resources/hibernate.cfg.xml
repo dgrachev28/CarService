@@ -10,5 +10,6 @@
         <mapping class="carservice.domain.Service" />
         <mapping class="carservice.domain.IncomeTicket" />
         <mapping class="carservice.domain.Client" />
+        <mapping class="carservice.domain.SystemState" />
     </session-factory>
 </hibernate-configuration>

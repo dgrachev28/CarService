@@ -17,13 +17,14 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class ClientDAO {
 
-
     @PersistenceContext
     private EntityManager entityManager;
-
 
     public void insertClient(Client client) {
         entityManager.persist(client);
     }
 
+    public void deleteAllClients() {
+        entityManager.createQuery("delete from Client c").executeUpdate();
+    }
 }

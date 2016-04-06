@@ -14,10 +14,8 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class IncomeTicketDAO {
 
-
     @PersistenceContext
     private EntityManager entityManager;
-
 
     public void insertIncomeTicket(int workshopId, IncomeTicket incomeTicket) {
         Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
@@ -71,6 +69,10 @@ public class IncomeTicketDAO {
         String queryText = "select count(t.client) from IncomeTicket t where t.status like 'Complete'";
         long carCount = (Long) entityManager.createQuery(queryText).getSingleResult();
         return (int) carCount;
+    }
+
+    public void deleteAllTickets() {
+        entityManager.createQuery("delete from IncomeTicket t").executeUpdate();
     }
 
 }

@@ -1,10 +1,7 @@
 package carservice.service;
 
 import carservice.dao.*;
-import carservice.domain.Client;
-import carservice.domain.Master;
-import carservice.domain.IncomeTicket;
-import carservice.domain.Workshop;
+import carservice.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +25,9 @@ public class TicketGenerator extends Thread {
     @Autowired
     private SystemTimer systemTimer;
 
+    @Autowired
+    private SystemStateDAO systemStateDAO;
+
     public static final int RANDOM_INTERVAL_START_MINUTES = 15;
     public static final int RANDOM_INTERVAL_END_MINUTES = 60;
     public static final int RANDOM_PERIOD_MINUTES = RANDOM_INTERVAL_END_MINUTES - RANDOM_INTERVAL_START_MINUTES;
@@ -36,7 +36,7 @@ public class TicketGenerator extends Thread {
     public void run() {
         try {
             systemTimer.initStartDateTime();
-            while (true) {
+            while (systemStateDAO.getSystemState().getStatus() == Status.RUNNING) {
                 Calendar currentDate = systemTimer.getCurrentDateTime();
 
                 if (currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
@@ -53,6 +53,9 @@ public class TicketGenerator extends Thread {
         }
     }
 
+    public void stopTicketGenerating() {
+        this.interrupt();
+    }
 
     private void generateTicket() {
         Client client = new Client();
@@ -61,8 +64,6 @@ public class TicketGenerator extends Thread {
         clientDAO.insertClient(client);
 
         addIncomeTicket(client);
-
-
     }
 
     public void addIncomeTicket(Client client) {
@@ -70,7 +71,6 @@ public class TicketGenerator extends Thread {
         Workshop workshop = workshopDAO.getWorkshopByService(service);
 
         Master freeMaster = getFreeMasterInWorkshop(workshop);
-
 
         IncomeTicket incomeTicket = new IncomeTicket();
         incomeTicket.setClient(client);
