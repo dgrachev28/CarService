@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Calendar;
 import java.util.List;
 
 @Repository
@@ -38,6 +39,14 @@ public class IncomeTicketDAO {
         Query query = entityManager.createQuery("update IncomeTicket t set t.master = :master where t.id = :id");
         query.setParameter("id", ticketId);
         query.setParameter("master", master);
+        query.executeUpdate();
+    }
+
+    public void setTicketFinishDate(int ticketId, Calendar finishDate) {
+        String textQuery = "update IncomeTicket t set t.finishProcessDate = :finishDate where t.id = :id";
+        Query query = entityManager.createQuery(textQuery);
+        query.setParameter("id", ticketId);
+        query.setParameter("finishDate", finishDate);
         query.executeUpdate();
     }
 
