@@ -28,8 +28,8 @@ public class TicketGenerator extends Thread {
     @Autowired
     private SystemStateDAO systemStateDAO;
 
-    public static final int RANDOM_INTERVAL_START_MINUTES = 15;
-    public static final int RANDOM_INTERVAL_END_MINUTES = 60;
+    public static final int RANDOM_INTERVAL_START_MINUTES = 5;
+    public static final int RANDOM_INTERVAL_END_MINUTES = 15;
     public static final int RANDOM_PERIOD_MINUTES = RANDOM_INTERVAL_END_MINUTES - RANDOM_INTERVAL_START_MINUTES;
 
 
@@ -51,10 +51,6 @@ public class TicketGenerator extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public void stopTicketGenerating() {
-        this.interrupt();
     }
 
     private void generateTicket() {
@@ -120,11 +116,11 @@ public class TicketGenerator extends Thread {
 
     private int getRandomTicketInterval() {
         int randomValueMinutes = (int) (RANDOM_INTERVAL_START_MINUTES + new Random().nextDouble() * RANDOM_PERIOD_MINUTES);
-        int result = systemTimer.minutesToMilliSeconds(randomValueMinutes) / SystemTimer.TIME_SCALE;
+        int result = systemTimer.minutesToMilliSeconds(systemTimer.convertWorkTime(randomValueMinutes));
+        result /= SystemTimer.TIME_SCALE;
         System.out.println(result);
         return result;
     }
-
 
     private char generateRandomSymbol() {
         Character[] possibleLetters = new Character[]{'А', 'В', 'Е', 'К', 'М', 'Н', 'О', 'Р', 'С', 'Т', 'У', 'Х'};
