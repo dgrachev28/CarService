@@ -6,6 +6,7 @@ import carservice.dao.WorkshopDAO;
 import carservice.domain.IncomeTicket;
 import carservice.domain.Master;
 
+import java.util.Calendar;
 import java.util.Random;
 
 public class MasterWorking extends Thread {
@@ -60,6 +61,7 @@ public class MasterWorking extends Thread {
             IncomeTicket firstTicket = incomeTicketDAO.getFirstTicketInQueue();
             incomeTicketDAO.setTicketMaster(firstTicket.getId(), incomeTicket.getMaster());
             incomeTicketDAO.setTicketStatus(firstTicket.getId(), "InProcess");
+            incomeTicketDAO.setTicketFinishDate(firstTicket.getId(), Calendar.getInstance());
 
             MasterWorking masterWorking = new MasterWorking(firstTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
             masterWorking.run();

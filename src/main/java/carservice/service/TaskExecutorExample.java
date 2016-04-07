@@ -6,7 +6,7 @@ import org.springframework.core.task.TaskExecutor;
 public class TaskExecutorExample {
 
     @Autowired
-    public TicketGenerator ticketGenerator;
+    private TicketGenerator ticketGenerator;
 
     private TaskExecutor taskExecutor;
 

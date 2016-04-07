@@ -10,15 +10,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
+import java.util.Calendar;
+import java.util.List;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 public class IncomeTicketDAO {
 
-
     @PersistenceContext
     private EntityManager entityManager;
-
 
     public void insertIncomeTicket(int workshopId, IncomeTicket incomeTicket) {
         Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
@@ -41,6 +41,14 @@ public class IncomeTicketDAO {
         Query query = entityManager.createQuery("update IncomeTicket t set t.master = :master where t.id = :id");
         query.setParameter("id", ticketId);
         query.setParameter("master", master);
+        query.executeUpdate();
+    }
+
+    public void setTicketFinishDate(int ticketId, Calendar finishDate) {
+        String textQuery = "update IncomeTicket t set t.finishProcessDate = :finishDate where t.id = :id";
+        Query query = entityManager.createQuery(textQuery);
+        query.setParameter("id", ticketId);
+        query.setParameter("finishDate", finishDate);
         query.executeUpdate();
     }
 
@@ -100,6 +108,7 @@ public class IncomeTicketDAO {
         return (int) carCount;
     }
 
+<<<<<<< HEAD
     public Map<String, Long> getServicesNumber() {
         String queryText = "select t.service.name, COUNT(t) from IncomeTicket t where t.status not like 'inQueue' group by t.service.name";
         List<Object[]> servicesNumberList = entityManager.createQuery(queryText).getResultList();
@@ -108,6 +117,10 @@ public class IncomeTicketDAO {
             servicesNumberMap.put((String)o[0], (Long)o[1]);
         }
         return servicesNumberMap;
+=======
+    public void deleteAllTickets() {
+        entityManager.createQuery("delete from IncomeTicket t").executeUpdate();
+>>>>>>> 653806b2cae91fa3378b00587e2ec31873c20598
     }
 
 }

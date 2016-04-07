@@ -1,10 +1,7 @@
 package carservice.service;
 
 import carservice.dao.*;
-import carservice.domain.Client;
-import carservice.domain.Master;
-import carservice.domain.IncomeTicket;
-import carservice.domain.Workshop;
+import carservice.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +25,18 @@ public class TicketGenerator extends Thread {
     @Autowired
     private SystemTimer systemTimer;
 
-    public static final int RANDOM_INTERVAL_START_MINUTES = 15;
-    public static final int RANDOM_INTERVAL_END_MINUTES = 60;
+    @Autowired
+    private SystemStateDAO systemStateDAO;
+
+    public static final int RANDOM_INTERVAL_START_MINUTES = 5;
+    public static final int RANDOM_INTERVAL_END_MINUTES = 15;
     public static final int RANDOM_PERIOD_MINUTES = RANDOM_INTERVAL_END_MINUTES - RANDOM_INTERVAL_START_MINUTES;
 
 
     public void run() {
         try {
             systemTimer.initStartDateTime();
-            while (true) {
+            while (systemStateDAO.getSystemState().getStatus() == Status.RUNNING) {
                 Calendar currentDate = systemTimer.getCurrentDateTime();
 
                 if (currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
@@ -53,7 +53,6 @@ public class TicketGenerator extends Thread {
         }
     }
 
-
     private void generateTicket() {
         Client client = new Client();
         client.setCarId(generateRandomCarId());
@@ -61,8 +60,6 @@ public class TicketGenerator extends Thread {
         clientDAO.insertClient(client);
 
         addIncomeTicket(client);
-
-
     }
 
     public void addIncomeTicket(Client client) {
@@ -70,7 +67,6 @@ public class TicketGenerator extends Thread {
         Workshop workshop = workshopDAO.getWorkshopByService(service);
 
         Master freeMaster = getFreeMasterInWorkshop(workshop);
-
 
         IncomeTicket incomeTicket = new IncomeTicket();
         incomeTicket.setClient(client);
@@ -120,11 +116,11 @@ public class TicketGenerator extends Thread {
 
     private int getRandomTicketInterval() {
         int randomValueMinutes = (int) (RANDOM_INTERVAL_START_MINUTES + new Random().nextDouble() * RANDOM_PERIOD_MINUTES);
-        int result = systemTimer.minutesToMilliSeconds(randomValueMinutes) / SystemTimer.TIME_SCALE;
+        int result = systemTimer.minutesToMilliSeconds(systemTimer.convertWorkTime(randomValueMinutes));
+        result /= SystemTimer.TIME_SCALE;
         System.out.println(result);
         return result;
     }
-
 
     private char generateRandomSymbol() {
         Character[] possibleLetters = new Character[]{'А', 'В', 'Е', 'К', 'М', 'Н', 'О', 'Р', 'С', 'Т', 'У', 'Х'};
