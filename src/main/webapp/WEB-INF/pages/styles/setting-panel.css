@@ -109,13 +109,18 @@
 .setting-panel__atributes-panel-label {
     display: inline-block;
     vertical-align: middle;
-    font-size: 18px;
+    font-size: 17px;
     color: #262626;
     text-transform: none;
     font-weight: 400;
     margin-right: 60px;
-    width: 350px;
+    width: 420px;
     line-height: 30px;
+}
+
+.setting-panel__atributes-panel-sublabel {
+    font-size: 14px;
+    color: #8e8e8e;
 }
 
 .setting-panel__atributes-panel-value {
@@ -126,4 +131,24 @@
 .setting-panel__atributes-panel-value input {
     padding: 5px;
     width: 45px;
+}
+
+
+.setting-panel__atributes-panel-value input._error {
+    border: 2px solid #e60000;
+    border-radius: 2px;
+    box-shadow: 0 0 7px 0 rgba(230, 0, 0, 0.5);
+}
+
+
+.setting-panel__button._disabled {
+    background-color: #cccccc;
+    border-color: #b8b8b8;
+    cursor: auto;
+}
+
+.setting-panel__button._disabled:hover {
+    background-color: #cccccc;
+    border-color: #b8b8b8;
+    cursor: auto;
 }

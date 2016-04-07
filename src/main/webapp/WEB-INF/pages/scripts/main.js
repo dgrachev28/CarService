@@ -1,13 +1,20 @@
 $(document).ready(function() {
 
     var classes = {
-        contentButton: "content__button",
-        contentButtonPlay: "content__button_play",
         workshop: "workshop",
         workshopMasters: "workshop-masters",
         workshopMastersItem: "workshop-masters__item",
         workshopQueue: "workshop-queue",
-        workshopQueueItem: "workshop-queue__item"
+        workshopQueueItem: "workshop-queue__item",
+        disabled: "_disabled"
+    };
+
+
+    var id = {
+        settingsButton: "settings-button",
+        restartButton: "restart-button",
+        pauseButton: "pause-button",
+        stopButton: "stop-button"
     };
 
 
@@ -23,7 +30,13 @@ $(document).ready(function() {
         workshopsEmpty,
         $contentButton,
         $workshop,
-        $settings;
+        $settingsButton,
+        $restartButton,
+        $pauseButton,
+        $stopButton,
+
+        //RUNNING / STOPPED / PAUSED
+        processState;
 
 
 
@@ -33,37 +46,59 @@ $(document).ready(function() {
         statisticEmpty = true;
         workshopsEmpty = true;
 
+        processState = "RUNNING";
+
         $contentButton = $("." + classes.contentButton);
         $workshop = $("." + classes.workshop);
-        $settings = $("#settings-button");
+        $settingsButton = $("#" + id.settingsButton);
+        $restartButton = $("#" + id.restartButton);
+        $pauseButton = $("#" + id.pauseButton);
+        $stopButton = $("#" + id.stopButton);
     }
 
 
     function bindEvents() {
-        $contentButton.on("click", playButtonHandler);
-        $settings.on("click", settingsClickHandler);
+        $pauseButton.on("click", pauseClickHandler);
+        $settingsButton.on("click", settingsClickHandler);
+        $restartButton.on("click", restartClickHandler);
+        $stopButton.on("click", stopClickHandler);
     }
 
 
 
-    function playButtonHandler() {
-        var $this = $(this);
-        if ($this.hasClass(classes.contentButtonPlay)) {
-            $this.removeClass(classes.contentButtonPlay);
-            timerStart();
-        } else {
-            $this.addClass(classes.contentButtonPlay);
-            clearTimeout(timerId);
+    function pauseClickHandler() {
+        if (!$(this).hasClass(classes.disabled)) {
+            if (processState == "PAUSED") {
+                processState = "RUNNING";
+                timerStart();
+            } else {
+                processState = "PAUSED";
+                clearTimeout(timerId);
+            }
         }
     }
 
 
     function settingsClickHandler(e) {
         if($(e.target).hasClass("setting-panel__button_settings")) {
-            $settings.toggleClass("_opened");
+            $settingsButton.toggleClass("_opened");
         }
     }
 
+    function restartClickHandler() {
+        if (processState == "RUNNING" || processState == "PAUSED") {
+            stopApplication(startApplication);
+        } else {
+            startApplication();
+        }
+    }
+
+
+    function stopClickHandler() {
+        if (!$(this).hasClass(classes.disabled)) {
+            stopApplication();
+        }
+    }
 
 
     function updateContent(data) {
@@ -227,6 +262,28 @@ $(document).ready(function() {
     }
 
 
+    function extractOneSetting(element) {
+        if (element.hasClass("_error")) {
+            return +element.attr("defaultValue");
+        } else {
+            return +element.val();
+        }
+    }
+
+    function extractSettings() {
+        var settings = {};
+        settings.masterCount1 = extractOneSetting($("#settings-masters1"));
+        settings.masterCount2 = extractOneSetting($("#settings-masters2"));
+        settings.masterCount3 = extractOneSetting($("#settings-masters3"));
+        settings.masterCount4 = extractOneSetting($("#settings-masters4"));
+        settings.minIntervalMinutes = extractOneSetting($("#settings-min-interval"));
+        settings.maxIntervalMinutes = extractOneSetting($("#settings-max-interval"));
+        settings.timeCoefficient = extractOneSetting($("#settings-coefficient"));
+        settings.modelingStep = extractOneSetting($("#settings-step"));
+        return settings;
+    }
+
+
 
     // Получение данных с сервера
     function receive() {
@@ -251,13 +308,34 @@ $(document).ready(function() {
     }
 
 
-    function startQueueThread() {
+    function startApplication() {
         $.ajax({
             method: 'GET',
-            url: '/startQueueThread',
-            data: {},
+            url: '/startApplication',
+            data: extractSettings(),
             success: function(data) {
-                console.log("Queue generating is started");
+                timerStart();
+                processState = "RUNNING";
+                $pauseButton.removeClass(classes.disabled);
+                $stopButton.removeClass(classes.disabled);
+            }
+        });
+    }
+
+
+    function stopApplication(callback) {
+        $.ajax({
+            method: 'GET',
+            url: '/stopApplication',
+            data: {},
+            success: function() {
+                if(callback) {
+                    callback();
+                    processState = "STOPPED";
+                    $pauseButton.addClass(classes.disabled);
+                    $stopButton.addClass(classes.disabled);
+
+                }
             }
         });
     }
@@ -268,10 +346,7 @@ $(document).ready(function() {
 
         bindEvents();
 
-        startQueueThread();
-
-        receive();
-        timerStart();
+        startApplication();
     }
 
 
