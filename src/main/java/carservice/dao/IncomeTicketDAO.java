@@ -108,19 +108,18 @@ public class IncomeTicketDAO {
         return (int) carCount;
     }
 
-<<<<<<< HEAD
     public Map<String, Long> getServicesNumber() {
         String queryText = "select t.service.name, COUNT(t) from IncomeTicket t where t.status not like 'inQueue' group by t.service.name";
         List<Object[]> servicesNumberList = entityManager.createQuery(queryText).getResultList();
         Map<String, Long> servicesNumberMap = new HashMap<String, Long>();
         for (Object[] o : servicesNumberList) {
-            servicesNumberMap.put((String)o[0], (Long)o[1]);
+            servicesNumberMap.put((String) o[0], (Long) o[1]);
         }
         return servicesNumberMap;
-=======
+    }
+
     public void deleteAllTickets() {
         entityManager.createQuery("delete from IncomeTicket t").executeUpdate();
->>>>>>> 653806b2cae91fa3378b00587e2ec31873c20598
     }
 
 }
