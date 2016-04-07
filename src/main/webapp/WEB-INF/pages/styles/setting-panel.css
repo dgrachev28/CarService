@@ -11,9 +11,7 @@
 .setting-panel__button {
     display: inline-block;
     vertical-align: top;
-    padding: 10px 55px;
-    border: 1px solid #9a35b6;
-    background-color: #a420ea;
+    padding: 10px 40px;
     border-radius: 3px 3px 0 0;
     color: #fdfdfd;
     text-transform: uppercase;
@@ -21,10 +19,6 @@
     font-family: monospace;
     font-weight: 700;
     cursor: pointer;
-}
-
-.setting-panel__button:hover {
-    background-color: #8019b6;
 }
 
 .setting-panel__button + .setting-panel__button {
@@ -40,5 +34,121 @@
     font-weight: 700;
     font-family: sans-serif;
     word-spacing: 10px;
-    color: #4E037D;
+    color: #504d52;
+}
+
+.setting-panel__button_settings {
+    position: relative;
+    border: 1px solid #9a35b6;
+    background-color: #a420ea;
+    border-bottom: none;
+}
+
+.setting-panel__button_settings:hover {
+    background-color: #8019b6;
+}
+
+
+
+.setting-panel__button_restart {
+    border: 1px solid #0b7d05;
+    background-color: #15b80d;
+    border-bottom: none;
+}
+
+.setting-panel__button_restart:hover {
+    background-color: #168509;
+}
+
+
+
+.setting-panel__button_pause {
+    border: 1px solid #444399;
+    background-color: #645bbe;
+    border-bottom: none;
+}
+
+.setting-panel__button_pause:hover {
+    background-color: #3635b6;
+}
+
+
+
+.setting-panel__button_stop {
+    border: 1px solid #b60606;
+    background-color: #d90d12;
+    border-bottom: none;
+}
+
+.setting-panel__button_stop:hover {
+    background-color: #b60f0a;
+}
+
+
+#settings-button._opened .setting-panel__atributes-panel {
+    display: block;
+}
+
+
+.setting-panel__atributes-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 15px;
+    margin-left: -2px;
+    border: 1px solid #9a35b6;
+    background-color: #fff;
+    box-shadow: 0 5px 10px 0 rgba(100,100,100,0.8);
+}
+
+.setting-panel__atributes-panel-row {
+    margin: 20px 0;
+}
+
+.setting-panel__atributes-panel-label {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 17px;
+    color: #262626;
+    text-transform: none;
+    font-weight: 400;
+    margin-right: 60px;
+    width: 420px;
+    line-height: 30px;
+}
+
+.setting-panel__atributes-panel-sublabel {
+    font-size: 14px;
+    color: #8e8e8e;
+}
+
+.setting-panel__atributes-panel-value {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.setting-panel__atributes-panel-value input {
+    padding: 5px;
+    width: 45px;
+}
+
+
+.setting-panel__atributes-panel-value input._error {
+    border: 2px solid #e60000;
+    border-radius: 2px;
+    box-shadow: 0 0 7px 0 rgba(230, 0, 0, 0.5);
+}
+
+
+.setting-panel__button._disabled {
+    background-color: #cccccc;
+    border-color: #b8b8b8;
+    cursor: auto;
+}
+
+.setting-panel__button._disabled:hover {
+    background-color: #cccccc;
+    border-color: #b8b8b8;
+    cursor: auto;
 }

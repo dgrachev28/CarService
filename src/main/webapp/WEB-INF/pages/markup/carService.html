@@ -13,14 +13,94 @@
     <link rel="stylesheet" href="../styles/workshop.css"/>
     <link rel="stylesheet" href="../styles/workshop-masters.css"/>
     <link rel="stylesheet" href="../styles/workshop-queue.css"/>
+
+    <script src="../scripts/jquery.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/validators.js"></script>
 </head>
 <body>
 
 <div class="page">
     <div class="content">
         <div class="setting-panel">
-            <div class="setting-panel__button setting-panel__button_edit" id="edit-button">edit</div>
-            <div class="setting-panel__button setting-panel__button_start" id="start-button">start</div>
+            <div class="setting-panel__button setting-panel__button_settings" id="settings-button">
+                settings
+                <div class="setting-panel__atributes-panel">
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Количество мастеров для цеха №1
+                            <span class="setting-panel__atributes-panel-sublabel">(от 2 до 7)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="2" max="7" value="2" onblur="numberValidator(this)" defaultValue="2" id="settings-masters1"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Количество мастеров для цеха №2
+                            <span class="setting-panel__atributes-panel-sublabel">(от 2 до 7)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="2" max="7" value="2" onblur="numberValidator(this)" defaultValue="2" id="settings-masters2"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Количество мастеров для цеха №3
+                            <span class="setting-panel__atributes-panel-sublabel">(от 2 до 7)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="2" max="7" value="2" onblur="numberValidator(this)" defaultValue="2" id="settings-masters3"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Количество мастеров для цеха №4
+                            <span class="setting-panel__atributes-panel-sublabel">(от 2 до 7)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="2" max="7" value="2" onblur="numberValidator(this)" defaultValue="2" id="settings-masters4"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Мин. интервал между заявками, мин
+                            <span class="setting-panel__atributes-panel-sublabel">(от 5 до 120)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="5" max="120" value="5" onblur="numberValidator(this)" defaultValue="5" id="settings-min-interval"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Макс. интервал между заявками, мин
+                            <span class="setting-panel__atributes-panel-sublabel">(от 5 до 120)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="5" max="120" value="15" onblur="numberValidator(this)" defaultValue="15" id="settings-max-interval"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Коэффициент времени выполнения заявки, %
+                            <span class="setting-panel__atributes-panel-sublabel">(от 0 до 80)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="0" max="80" value="20" onblur="numberValidator(this)" defaultValue="20" id="settings-coefficient"/>
+                        </div>
+                    </div>
+                    <div class="setting-panel__atributes-panel-row">
+                        <div class="setting-panel__atributes-panel-label">
+                            Шаг моделирования, часы
+                            <span class="setting-panel__atributes-panel-sublabel">(от 0.1 до 8)</span>
+                        </div>
+                        <div class="setting-panel__atributes-panel-value">
+                            <input type="number" min="0.1" max="8" value="0.5" onblur="numberValidator(this)" defaultValue="0.5" id="settings-step"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-panel__button setting-panel__button_restart" id="restart-button">restart</div>
             <div class="setting-panel__button setting-panel__button_pause" id="pause-button">pause</div>
             <div class="setting-panel__button setting-panel__button_stop" id="stop-button">stop</div>
             <div class="setting-panel__time" id="current-time">11 Jan 2016 12:15</div>
@@ -141,8 +221,5 @@
         </div>
     </div>
 </div>
-
-<script src="../scripts/jquery.js"></script>
-<script src="../scripts/main.js"></script>
 </body>
 </html>
