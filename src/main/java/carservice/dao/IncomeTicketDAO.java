@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
@@ -44,13 +45,13 @@ public class IncomeTicketDAO {
     }
 
     public int getTicketsInQueueCount() {
-        Query query = entityManager.createQuery("select count(t) from IncomeTicket t where t.status = 'InQueue'");
+        Query query = entityManager.createQuery("select count(t) from IncomeTicket t where t.status like 'InQueue'");
         long result = (Long) query.getSingleResult();
         return (int) result;
     }
 
     public IncomeTicket getFirstTicketInQueue() {
-        String queryText = "select top(1) from IncomeTicket t where t.status = 'InQueue' order by t.addQueueDate desc";
+        String queryText = "select top(1) from IncomeTicket t where t.status like 'InQueue' order by t.addQueueDate desc";
         return (IncomeTicket) entityManager.createQuery(queryText).getSingleResult();
     }
 
@@ -61,16 +62,52 @@ public class IncomeTicketDAO {
         return (int) servicesSumCost;
     }
 
-    public int getAverageQueueAndProcessingTime() {
-        String queryText = "select AVG(t.finishProcessDate - t.addQueueDate) from IncomeTicket t where t.status like 'Complete'";
-        long time = (Long) entityManager.createQuery(queryText).getSingleResult();
-        return (int) time;
+    public String getAverageQueueAndProcessingTime() {
+//        List<IncomeTicket> completedTickets = (List<IncomeTicket>) entityManager.createQuery(
+//              "select t from IncomeTicket t where t.status like 'Complete'"
+//                ).getResultList();
+//        if (completedTickets.isEmpty()) {
+//            return "недостаточно данных";
+//        } else {
+//            long timeInMillisSum = 0;
+//            for (IncomeTicket ticket : completedTickets) {
+//                timeInMillisSum += ticket.getFinishProcessDate().getTimeInMillis() - ticket.getAddQueueDate().getTimeInMillis();
+//            }
+//            long averageTimeInMillis = timeInMillisSum / completedTickets.size(),
+//                 averageTimeInMinutes = averageTimeInMillis / (1000 * 60);
+//
+//            String averageTimeStr = "";
+//
+//            if (averageTimeInMinutes / (60 * 24) != 0) {
+//                averageTimeStr += averageTimeInMinutes / (60 * 24) + " d ";
+//            }
+//            if ((averageTimeInMinutes % (60 * 24)) / 60 != 0) {
+//                averageTimeStr += (averageTimeInMinutes % (60 * 24)) / 60 + " h ";
+//            }
+//            if (averageTimeInMinutes % 60 != 0) {
+//                averageTimeStr += averageTimeInMinutes % 60 + " m";
+//            }
+//
+//            return averageTimeStr;
+//        }
+
+        return "0";
     }
 
     public int getServedCarCount() {
         String queryText = "select count(t.client) from IncomeTicket t where t.status like 'Complete'";
         long carCount = (Long) entityManager.createQuery(queryText).getSingleResult();
         return (int) carCount;
+    }
+
+    public Map<String, Long> getServicesNumber() {
+        String queryText = "select t.service.name, COUNT(t) from IncomeTicket t where t.status not like 'inQueue' group by t.service.name";
+        List<Object[]> servicesNumberList = entityManager.createQuery(queryText).getResultList();
+        Map<String, Long> servicesNumberMap = new HashMap<String, Long>();
+        for (Object[] o : servicesNumberList) {
+            servicesNumberMap.put((String)o[0], (Long)o[1]);
+        }
+        return servicesNumberMap;
     }
 
 }

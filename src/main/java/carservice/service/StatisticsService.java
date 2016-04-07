@@ -15,9 +15,11 @@ public class StatisticsService {
 
         statistics.setProfit(incomeTicketDAO.getServicesSumCost());
 
-//        statistics.setAverageTime(incomeTicketDAO.getAverageQueueAndProcessingTime());
+        statistics.setAverageTime(incomeTicketDAO.getAverageQueueAndProcessingTime());
 
         statistics.setServedCarCount(incomeTicketDAO.getServedCarCount());
+
+        statistics.setServicesNumber(incomeTicketDAO.getServicesNumber());
 
         return statistics;
     }
