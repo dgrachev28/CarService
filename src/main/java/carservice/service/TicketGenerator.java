@@ -21,12 +21,11 @@ public class TicketGenerator extends Thread {
     private MasterDAO masterDAO;
     @Autowired
     private ClientDAO clientDAO;
+    @Autowired
+    private SystemStateDAO systemStateDAO;
 
     @Autowired
     private SystemTimer systemTimer;
-
-    @Autowired
-    private SystemStateDAO systemStateDAO;
 
     public static final int RANDOM_INTERVAL_START_MINUTES = 5;
     public static final int RANDOM_INTERVAL_END_MINUTES = 15;
@@ -37,13 +36,6 @@ public class TicketGenerator extends Thread {
         try {
             systemTimer.initStartDateTime();
             while (systemStateDAO.getSystemState().getStatus() == Status.RUNNING) {
-                Calendar currentDate = systemTimer.getCurrentDateTime();
-
-                if (currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
-                        currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                    sleep(systemTimer.daysToMilliSeconds(2));
-                }
-
                 generateTicket();
                 sleep(getRandomTicketInterval());
             }
@@ -54,15 +46,36 @@ public class TicketGenerator extends Thread {
     }
 
     private void generateTicket() {
+        Client client = generateClient();
+        generateIncomeTickets(client);
+    }
+
+    private Client generateClient() {
         Client client = new Client();
         client.setCarId(generateRandomCarId());
         client.setBusy(false);
         clientDAO.insertClient(client);
-
-        addIncomeTicket(client);
+        return client;
     }
 
-    public void addIncomeTicket(Client client) {
+    private void generateIncomeTickets(Client client) {
+        int incomeTicketsCount = generateRandomTicketCount();
+        for (int i = 0; i < incomeTicketsCount; i++) {
+            addIncomeTicket(client);
+        }
+    }
+
+    private int generateRandomTicketCount() {
+        double random = new Random().nextDouble();
+        if (random < 0.75) {
+            return 1;
+        } else if (random < 0.9) {
+            return 2;
+        }
+        return 3;
+    }
+
+    private void addIncomeTicket(Client client) {
         carservice.domain.Service service = generateRandomService();
         Workshop workshop = workshopDAO.getWorkshopByService(service);
 
@@ -124,7 +137,7 @@ public class TicketGenerator extends Thread {
 
     private char generateRandomSymbol() {
         Character[] possibleLetters = new Character[]{'А', 'В', 'Е', 'К', 'М', 'Н', 'О', 'Р', 'С', 'Т', 'У', 'Х'};
-        return (char) (possibleLetters[new Random().nextInt(possibleLetters.length)]);
+        return (possibleLetters[new Random().nextInt(possibleLetters.length)]);
     }
 
     private int generateRandomNumeral() {

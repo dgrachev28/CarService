@@ -19,7 +19,6 @@ public class MasterWorking extends Thread {
     private IncomeTicketDAO incomeTicketDAO;
     private MasterDAO masterDAO;
 
-
     public static final int RUN_TIME_DEFLECTION_PERCENTS = 20;
 
 
@@ -44,7 +43,7 @@ public class MasterWorking extends Thread {
     private int getServiceRunTime() {
         int averageTimeMinutes = incomeTicket.getService().getAverageTime();
         int serviceRunTime = (int) (averageTimeMinutes * generateRandomRatio());
-        return systemTimer.minutesToMilliSeconds(serviceRunTime) / SystemTimer.TIME_SCALE;
+        return systemTimer.minutesToMilliSeconds(systemTimer.convertWorkTime(serviceRunTime)) / SystemTimer.TIME_SCALE;
     }
 
     private double generateRandomRatio() {
@@ -54,15 +53,17 @@ public class MasterWorking extends Thread {
 
     private void finishProcessService() {
         incomeTicketDAO.setTicketStatus(incomeTicket.getId(), "Complete");
+        incomeTicketDAO.setTicketFinishDate(incomeTicket.getId(), Calendar.getInstance());
         int ticketsInQueueCount = incomeTicketDAO.getTicketsInQueueCount();
         if (ticketsInQueueCount == 0) {
             masterDAO.setMasterBusy(incomeTicket.getMaster().getId(), false);
+
         } else {
             IncomeTicket firstTicket = incomeTicketDAO.getFirstTicketInQueue();
             incomeTicketDAO.setTicketMaster(firstTicket.getId(), incomeTicket.getMaster());
             incomeTicketDAO.setTicketStatus(firstTicket.getId(), "InProcess");
-            incomeTicketDAO.setTicketFinishDate(firstTicket.getId(), Calendar.getInstance());
-
+            firstTicket.setMaster(incomeTicket.getMaster());
+            firstTicket.setStatus("InProcess");
             MasterWorking masterWorking = new MasterWorking(firstTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
             masterWorking.run();
         }

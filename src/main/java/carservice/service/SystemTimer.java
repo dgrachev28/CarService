@@ -8,7 +8,7 @@ import java.util.Calendar;
 @Service
 public class SystemTimer {
 
-    public static final int TIME_SCALE = 12 * 30;
+    public static final int TIME_SCALE = 12 * 30 * 5;
     public static final int START_WORK_HOUR = 9;
     public static final int END_WORK_HOUR = 21;
     public static final int END_WORK_HOUR_WEEKENDS = 18;
@@ -71,23 +71,4 @@ public class SystemTimer {
         }
         return END_WORK_HOUR;
     }
-
-    public long getStartTimeMillis() {
-        return startTimeMillis;
-    }
-
-    public void setStartTimeMillis(long startTimeMillis) {
-        this.startTimeMillis = startTimeMillis;
-    }
-
-    public Calendar getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Calendar startDate) {
-        this.startDate = startDate;
-    }
-
-
-
 }

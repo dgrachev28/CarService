@@ -59,8 +59,11 @@ public class IncomeTicketDAO {
     }
 
     public IncomeTicket getFirstTicketInQueue() {
-        String queryText = "select top(1) from IncomeTicket t where t.status like 'InQueue' order by t.addQueueDate desc";
-        return (IncomeTicket) entityManager.createQuery(queryText).getSingleResult();
+        String queryText = "select t from IncomeTicket t where t.status like 'InQueue' order by t.addQueueDate desc";
+        Query query = entityManager.createQuery(queryText);
+        query.setFirstResult(0);
+        query.setMaxResults(1);
+        return (IncomeTicket) query.getSingleResult();
     }
 
     public int getServicesSumCost() {
@@ -71,35 +74,33 @@ public class IncomeTicketDAO {
     }
 
     public String getAverageQueueAndProcessingTime() {
-//        List<IncomeTicket> completedTickets = (List<IncomeTicket>) entityManager.createQuery(
-//              "select t from IncomeTicket t where t.status like 'Complete'"
-//                ).getResultList();
-//        if (completedTickets.isEmpty()) {
-//            return "недостаточно данных";
-//        } else {
-//            long timeInMillisSum = 0;
-//            for (IncomeTicket ticket : completedTickets) {
-//                timeInMillisSum += ticket.getFinishProcessDate().getTimeInMillis() - ticket.getAddQueueDate().getTimeInMillis();
-//            }
-//            long averageTimeInMillis = timeInMillisSum / completedTickets.size(),
-//                 averageTimeInMinutes = averageTimeInMillis / (1000 * 60);
-//
-//            String averageTimeStr = "";
-//
-//            if (averageTimeInMinutes / (60 * 24) != 0) {
-//                averageTimeStr += averageTimeInMinutes / (60 * 24) + " d ";
-//            }
-//            if ((averageTimeInMinutes % (60 * 24)) / 60 != 0) {
-//                averageTimeStr += (averageTimeInMinutes % (60 * 24)) / 60 + " h ";
-//            }
-//            if (averageTimeInMinutes % 60 != 0) {
-//                averageTimeStr += averageTimeInMinutes % 60 + " m";
-//            }
-//
-//            return averageTimeStr;
-//        }
+        List<IncomeTicket> completedTickets = (List<IncomeTicket>) entityManager.createQuery(
+              "select t from IncomeTicket t where t.status like 'Complete'"
+                ).getResultList();
+        if (completedTickets.isEmpty()) {
+            return "недостаточно данных";
+        } else {
+            long timeInMillisSum = 0;
+            for (IncomeTicket ticket : completedTickets) {
+                timeInMillisSum += ticket.getFinishProcessDate().getTimeInMillis() - ticket.getAddQueueDate().getTimeInMillis();
+            }
+            long averageTimeInMillis = timeInMillisSum / completedTickets.size(),
+                 averageTimeInMinutes = averageTimeInMillis / (1000 * 60);
 
-        return "0";
+            String averageTimeStr = "";
+
+            if (averageTimeInMinutes / (60 * 24) != 0) {
+                averageTimeStr += averageTimeInMinutes / (60 * 24) + " d ";
+            }
+            if ((averageTimeInMinutes % (60 * 24)) / 60 != 0) {
+                averageTimeStr += (averageTimeInMinutes % (60 * 24)) / 60 + " h ";
+            }
+            if (averageTimeInMinutes % 60 != 0) {
+                averageTimeStr += averageTimeInMinutes % 60 + " m";
+            }
+
+            return averageTimeStr;
+        }
     }
 
     public int getServedCarCount() {
