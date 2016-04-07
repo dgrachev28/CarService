@@ -22,7 +22,8 @@ $(document).ready(function() {
         statisticEmpty,
         workshopsEmpty,
         $contentButton,
-        $workshop;
+        $workshop,
+        $settings;
 
 
 
@@ -34,11 +35,13 @@ $(document).ready(function() {
 
         $contentButton = $("." + classes.contentButton);
         $workshop = $("." + classes.workshop);
+        $settings = $("#settings-button");
     }
 
 
     function bindEvents() {
         $contentButton.on("click", playButtonHandler);
+        $settings.on("click", settingsClickHandler);
     }
 
 
@@ -55,11 +58,19 @@ $(document).ready(function() {
     }
 
 
+    function settingsClickHandler(e) {
+        if($(e.target).hasClass("setting-panel__button_settings")) {
+            $settings.toggleClass("_opened");
+        }
+    }
+
+
 
     function updateContent(data) {
         if (data) {
             updateWorkshops(data.workshops);
             updateStatistics(data.statistics);
+            updateTime(data.currentDateTime);
         }
     }
 
@@ -170,6 +181,11 @@ $(document).ready(function() {
         }
     }
 
+
+
+    function updateTime(currentDateTime) {
+        $("#current-time").html(date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), currentDateTime);
+    }
 
 
     function getStatisticBlockMarkup(id, param, value) {
