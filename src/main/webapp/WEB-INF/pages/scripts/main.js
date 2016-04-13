@@ -34,6 +34,7 @@ $(document).ready(function() {
         $restartButton,
         $pauseButton,
         $stopButton,
+        averageQueueLength,
 
         //RUNNING / STOPPED / PAUSED
         processState;
@@ -54,6 +55,14 @@ $(document).ready(function() {
         $restartButton = $("#" + id.restartButton);
         $pauseButton = $("#" + id.pauseButton);
         $stopButton = $("#" + id.stopButton);
+
+        averageQueueLength = {
+            iterationsNumber: 0,
+            queueLength1: 0,
+            queueLength2: 0,
+            queueLength3: 0,
+            queueLength4: 0
+        };
     }
 
 
@@ -104,11 +113,31 @@ $(document).ready(function() {
     function updateContent(data) {
         if (data) {
             updateWorkshops(data.workshops);
+            countAverageQueueLength(data.workshops);
             updateStatistics(data.statistics);
             updateTime(data.currentDateTime);
         }
     }
 
+
+
+    function countAverageQueueLength(workshops) {
+        var i, id, newValue, oldValue, currentQueueLength, iterationsNumber;
+
+        for (i = 0; i < workshops.length; ++i) {
+            id = workshops[i].id;
+            currentQueueLength = workshops[i].queue.length;
+            oldValue = averageQueueLength["queueLength" + id];
+            iterationsNumber = averageQueueLength.iterationsNumber;
+
+            newValue = (oldValue * iterationsNumber + currentQueueLength) / (iterationsNumber + 1);
+
+            averageQueueLength["queueLength" + id] = newValue;
+
+            ++averageQueueLength.iterationsNumber;
+
+        }
+    }
 
 
     function updateWorkshops(workshops) {
@@ -187,10 +216,11 @@ $(document).ready(function() {
         $("#profit").html(statistics.profit);
         $("#servedCar").html(statistics.servedCarCount);
 
-        var queueLength = statistics.queueLength;
-        for (i = 0; i < queueLength.length; ++i) {
-            $("#queueLength" + queueLength[i].id).html(queueLength[i].length);
-        }
+        $("#queueLength1").html(averageQueueLength.queueLength1);
+        $("#queueLength2").html(averageQueueLength.queueLength2);
+        $("#queueLength3").html(averageQueueLength.queueLength3);
+        $("#queueLength4").html(averageQueueLength.queueLength4);
+
 
         var mastersIncome = statistics.mastersIncome;
         var servicesNumber = statistics.servicesNumber;
@@ -234,6 +264,21 @@ $(document).ready(function() {
 
     function updateTime(currentDateTime) {
         $("#current-time").html(date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), currentDateTime);
+    }
+
+
+    function clearMarkup() {
+        $("." + classes.workshopMasters).html("");
+        $("." + classes.workshopQueue).html("");
+        $("#averageTime").html("");
+        $("#profit").html("");
+        $("#servedCar").html("");
+        $("#queueLength1").html("");
+        $("#queueLength2").html("");
+        $("#queueLength3").html("");
+        $("#queueLength4").html("");
+        $("#salaries").html("");
+        $("#servicesNumber").html("");
     }
 
 
@@ -328,11 +373,7 @@ $(document).ready(function() {
             url: '/startApplication',
             data: extractSettings(),
             success: function(data) {
-                statisticEmpty = true;
-                workshopsEmpty = true;
-                processState = "RUNNING";
-                $pauseButton.removeClass(classes.disabled);
-                $stopButton.removeClass(classes.disabled);
+                initVars();
                 timerStart();
             }
         });
@@ -346,11 +387,10 @@ $(document).ready(function() {
             data: {},
             success: function() {
                 if(callback) {
-                    callback();
+                    clearMarkup();
                     processState = "STOPPED";
+                    callback();
                 }
-                // $pauseButton.addClass(classes.disabled);
-                // $stopButton.addClass(classes.disabled);
             }
         });
     }
