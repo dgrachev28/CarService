@@ -13,6 +13,9 @@ public class Statistics {
 
     private Map<String, Long> servicesNumber;
 
+    private Map<String, Long> mastersIncome;
+
+
     public String getAverageTime() {
         return averageTime;
     }
@@ -43,6 +46,14 @@ public class Statistics {
 
     public void setServicesNumber(Map<String, Long> servicesNumber) {
         this.servicesNumber = servicesNumber;
+    }
+
+    public Map<String, Long> getMastersIncome() {
+        return mastersIncome;
+    }
+
+    public void setMastersIncome(Map<String, Long> mastersIncome) {
+        this.mastersIncome = mastersIncome;
     }
 
 }

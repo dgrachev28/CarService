@@ -21,6 +21,8 @@ public class StatisticsService {
 
         statistics.setServicesNumber(incomeTicketDAO.getServicesNumber());
 
+        statistics.setMastersIncome(incomeTicketDAO.getMastersIncome());
+
         return statistics;
     }
 

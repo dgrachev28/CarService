@@ -147,6 +147,16 @@ public class IncomeTicketDAO {
         return servicesNumberMap;
     }
 
+    public Map<String, Long> getMastersIncome() {
+        String queryText = "select t.master.name, SUM(t.service.cost) from IncomeTicket t where t.status like 'Complete' group by t.master.name";
+        List<Object[]> mastersIncomeList = entityManager.createQuery(queryText).getResultList();
+        Map<String, Long> mastersIncomeMap = new HashMap<String, Long>();
+        for (Object[] o : mastersIncomeList) {
+            mastersIncomeMap.put((String) o[0], (Long) o[1]);
+        }
+        return mastersIncomeMap;
+    }
+
     public void deleteAllTickets() {
         entityManager.createQuery("delete from IncomeTicket t").executeUpdate();
     }
