@@ -13,7 +13,7 @@ public class StatisticsService {
     public Statistics getStatistics() {
         Statistics statistics = new Statistics();
 
-        statistics.setProfit(incomeTicketDAO.getServicesSumCost());
+        statistics.setProfit(incomeTicketDAO.getServicesSumCost().intValue());
 
         statistics.setAverageTime(incomeTicketDAO.getAverageQueueAndProcessingTime());
 

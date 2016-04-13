@@ -5,6 +5,7 @@ import carservice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,9 +28,17 @@ public class ViewController {
         return carService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/startQueueThread")
-    public String startQueueThread() {
-        systemStateService.startApplication();
+    @RequestMapping(method = RequestMethod.GET, value = "/startApplication")
+    public String startQueueThread(@RequestParam Integer masterCount1,
+                                   @RequestParam Integer masterCount2,
+                                   @RequestParam Integer masterCount3,
+                                   @RequestParam Integer masterCount4,
+                                   @RequestParam Integer minIntervalMinutes,
+                                   @RequestParam Integer maxIntervalMinutes,
+                                   @RequestParam Integer timeCoefficient) {
+        systemStateService.startApplication(new Integer[] {masterCount1, masterCount2, masterCount3, masterCount4},
+                minIntervalMinutes, maxIntervalMinutes, timeCoefficient);
+
         return "";
     }
 

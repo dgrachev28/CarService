@@ -1,5 +1,6 @@
 package carservice.dao;
 
+import carservice.domain.Master;
 import carservice.domain.Service;
 import carservice.domain.Workshop;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
@@ -24,5 +26,19 @@ public class MasterDAO {
         query.setParameter("busy", busy);
         query.executeUpdate();
     }
+
+    public void setAllMastersFree() {
+        Query query = entityManager.createQuery("update Master m set m.busy = false");
+        query.executeUpdate();
+    }
+
+    public void replaceWorkshopMasters(int workshopId, Set<Master> masters) {
+        Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
+        query.setParameter("workshopId", workshopId);
+        Workshop workshop = (Workshop) query.getSingleResult();
+        workshop.setMasters(masters);
+
+    }
+
 
 }

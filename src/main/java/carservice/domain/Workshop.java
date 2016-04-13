@@ -23,7 +23,7 @@ public class Workshop {
     @JoinColumn(name="workshop_id")
     private List<IncomeTicket> queue;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private Set<Master> masters;
 
     public Integer getId() {

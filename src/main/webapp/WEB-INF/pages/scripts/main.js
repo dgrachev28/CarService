@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 
     var constants = {
-        TIMER_DELAY: 2000
+        TIMER_DELAY: 100
     };
 
 
@@ -279,7 +279,7 @@ $(document).ready(function() {
         settings.minIntervalMinutes = extractOneSetting($("#settings-min-interval"));
         settings.maxIntervalMinutes = extractOneSetting($("#settings-max-interval"));
         settings.timeCoefficient = extractOneSetting($("#settings-coefficient"));
-        settings.modelingStep = extractOneSetting($("#settings-step"));
+        // settings.modelingStep = extractOneSetting($("#settings-step"));
         return settings;
     }
 
@@ -332,10 +332,9 @@ $(document).ready(function() {
                 if(callback) {
                     callback();
                     processState = "STOPPED";
-                    $pauseButton.addClass(classes.disabled);
-                    $stopButton.addClass(classes.disabled);
-
                 }
+                // $pauseButton.addClass(classes.disabled);
+                // $stopButton.addClass(classes.disabled);
             }
         });
     }

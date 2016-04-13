@@ -3,12 +3,21 @@ package carservice.service;
 import carservice.dao.*;
 import carservice.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
+import javax.transaction.TransactionManager;
 import java.util.Calendar;
 import java.util.Random;
 
 @Service
+@Scope("prototype")
 public class TicketGenerator extends Thread {
 
     @Autowired
@@ -25,6 +34,9 @@ public class TicketGenerator extends Thread {
     private SystemStateDAO systemStateDAO;
 
     @Autowired
+    private ServletContext servletContext;
+
+    @Autowired
     private SystemTimer systemTimer;
 
     public static final int RANDOM_INTERVAL_START_MINUTES = 5;
@@ -32,9 +44,14 @@ public class TicketGenerator extends Thread {
     public static final int RANDOM_PERIOD_MINUTES = RANDOM_INTERVAL_END_MINUTES - RANDOM_INTERVAL_START_MINUTES;
 
 
+    public TicketGenerator() {
+        System.out.println("NEW THREAD");
+    }
+
     public void run() {
         try {
             systemTimer.initStartDateTime();
+            systemStateDAO.setSystemState(Status.RUNNING);
             while (systemStateDAO.getSystemState().getStatus() == Status.RUNNING) {
                 generateTicket();
                 sleep(getRandomTicketInterval());
@@ -44,7 +61,7 @@ public class TicketGenerator extends Thread {
             e.printStackTrace();
         }
     }
-
+    @Transactional
     private void generateTicket() {
         Client client = generateClient();
         generateIncomeTickets(client);
@@ -93,8 +110,13 @@ public class TicketGenerator extends Thread {
             incomeTicket.setMaster(freeMaster);
             incomeTicket.setStartProcessDate(incomeTicket.getAddQueueDate());
 
-            MasterWorking masterWorking = new MasterWorking(incomeTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
+            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            MasterWorking masterWorking = (MasterWorking) context.getBean("masterWorking");
+            masterWorking.init(incomeTicket);
             masterWorking.start();
+
+//            MasterWorking masterWorking = new MasterWorking(incomeTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
+//            masterWorking.start();
 
         }
         incomeTicketDAO.insertIncomeTicket(workshop.getId(), incomeTicket);

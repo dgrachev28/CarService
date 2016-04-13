@@ -44,6 +44,14 @@ public class IncomeTicketDAO {
         query.executeUpdate();
     }
 
+    public void setTicketStartProcessDate(int ticketId, Calendar startDate) {
+        String textQuery = "update IncomeTicket t set t.startProcessDate = :startDate where t.id = :id";
+        Query query = entityManager.createQuery(textQuery);
+        query.setParameter("id", ticketId);
+        query.setParameter("startDate", startDate);
+        query.executeUpdate();
+    }
+
     public void setTicketFinishDate(int ticketId, Calendar finishDate) {
         String textQuery = "update IncomeTicket t set t.finishProcessDate = :finishDate where t.id = :id";
         Query query = entityManager.createQuery(textQuery);
@@ -66,11 +74,13 @@ public class IncomeTicketDAO {
         return (IncomeTicket) query.getSingleResult();
     }
 
-    public int getServicesSumCost() {
+    public Long getServicesSumCost() {
         String queryText = "select SUM(t.service.cost) from IncomeTicket t where t.status not like 'InQueue'";
-        long servicesSumCost = (Long) entityManager.
-                createQuery(queryText).getSingleResult();
-        return (int) servicesSumCost;
+        Long result = (Long) entityManager.createQuery(queryText).getSingleResult();
+        if (result != null) {
+            return result;
+        }
+        return 0L;
     }
 
     public String getAverageQueueAndProcessingTime() {
