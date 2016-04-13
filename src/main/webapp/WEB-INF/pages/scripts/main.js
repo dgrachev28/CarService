@@ -233,7 +233,8 @@ $(document).ready(function() {
 
 
     function updateTime(currentDateTime) {
-        $("#current-time").html(date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), currentDateTime);
+        var date = new Date(currentDateTime);
+        $("#current-time").html(date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"));
     }
 
 
