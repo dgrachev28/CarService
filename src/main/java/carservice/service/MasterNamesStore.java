@@ -1,5 +1,6 @@
 package carservice.service;
 
+import carservice.domain.Master;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -42,10 +43,13 @@ public class MasterNamesStore {
         return names[pointer++];
     }
 
-    public static Set<String> getNextNames(Integer size) {
-        Set<String> result = new HashSet<String>();
+    public static Set<Master> getMasters(Integer size) {
+        Set<Master> result = new HashSet<Master>();
         for (int i = 0; i < size; i++) {
-            result.add(getNextName());
+            Master master = new Master();
+            master.setBusy(false);
+            master.setName(getNextName());
+            result.add(master);
         }
         return result;
     }

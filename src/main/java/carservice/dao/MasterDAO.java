@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,12 +33,21 @@ public class MasterDAO {
         query.executeUpdate();
     }
 
+    public void deleteMasters() {
+        Query query = entityManager.createQuery("select w from Workshop w");
+        List<Workshop> workshops = (List<Workshop>) query.getResultList();
+        for (Workshop workshop : workshops) {
+            workshop.setMasters(new HashSet<Master>());
+        }
+
+//        entityManager.createQuery("delete from Master m").executeUpdate();
+    }
+
     public void replaceWorkshopMasters(int workshopId, Set<Master> masters) {
         Query query = entityManager.createQuery("select w from Workshop w where w.id = :workshopId");
         query.setParameter("workshopId", workshopId);
         Workshop workshop = (Workshop) query.getSingleResult();
         workshop.setMasters(masters);
-
     }
 
 

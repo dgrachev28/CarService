@@ -28,13 +28,18 @@ public class SystemStateService {
     @Autowired
     private MasterNamesStore masterNamesStore;
 
+
+    @Transactional
     public void startApplication(Integer[] mastersCounts, Integer minIntervalMinutes,
                                  Integer maxIntervalMinutes, Integer timeCoefficient) {
         WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         TicketGenerator ticketGenerator = (TicketGenerator) context.getBean("ticketGenerator");
         ticketGenerator.start();
 
-//        masterDAO.replaceWorkshopMasters(masterNamesStore.getNextNames(2));
+        for (int i = 0; i < mastersCounts.length; i++) {
+            masterDAO.replaceWorkshopMasters(i + 1, masterNamesStore.getMasters(mastersCounts[i]));
+        }
+
 
     }
     @Transactional
@@ -42,7 +47,7 @@ public class SystemStateService {
         systemStateDAO.setSystemState(Status.STOPPED);
         incomeTicketDAO.deleteAllTickets();
         clientDAO.deleteAllClients();
-        masterDAO.setAllMastersFree();
+        masterDAO.deleteMasters();
     }
 
 }

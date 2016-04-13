@@ -70,12 +70,11 @@ public class MasterWorking extends Thread {
         Calendar now = systemTimer.getCurrentDateTime();
         incomeTicketDAO.setTicketStatus(incomeTicket.getId(), "Complete");
         incomeTicketDAO.setTicketFinishDate(incomeTicket.getId(), now);
-        int ticketsInQueueCount = incomeTicketDAO.getTicketsInQueueCount();
-        if (ticketsInQueueCount == 0) {
+        IncomeTicket firstTicket = incomeTicketDAO.getFirstTicketInQueue(incomeTicket.getMaster());
+        if (firstTicket == null) {
             masterDAO.setMasterBusy(incomeTicket.getMaster().getId(), false);
 
         } else {
-            IncomeTicket firstTicket = incomeTicketDAO.getFirstTicketInQueue();
             incomeTicketDAO.setTicketMaster(firstTicket.getId(), incomeTicket.getMaster());
             incomeTicketDAO.setTicketStatus(firstTicket.getId(), "InProcess");
             incomeTicketDAO.setTicketStartProcessDate(firstTicket.getId(), now);

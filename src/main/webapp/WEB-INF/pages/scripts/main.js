@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 
     var constants = {
-        TIMER_DELAY: 100
+        TIMER_DELAY: 300
     };
 
 
@@ -314,10 +314,12 @@ $(document).ready(function() {
             url: '/startApplication',
             data: extractSettings(),
             success: function(data) {
-                timerStart();
+                statisticEmpty = true;
+                workshopsEmpty = true;
                 processState = "RUNNING";
                 $pauseButton.removeClass(classes.disabled);
                 $stopButton.removeClass(classes.disabled);
+                timerStart();
             }
         });
     }

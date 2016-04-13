@@ -1,6 +1,7 @@
 package carservice.dao;
 
 import carservice.domain.*;
+import org.hibernate.mapping.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
@@ -66,12 +69,27 @@ public class IncomeTicketDAO {
         return (int) result;
     }
 
-    public IncomeTicket getFirstTicketInQueue() {
-        String queryText = "select t from IncomeTicket t where t.status like 'InQueue' order by t.addQueueDate desc";
-        Query query = entityManager.createQuery(queryText);
-        query.setFirstResult(0);
-        query.setMaxResults(1);
-        return (IncomeTicket) query.getSingleResult();
+    public IncomeTicket getFirstTicketInQueue(Master master) {
+        String queryText = "select t from IncomeTicket t where t.status like 'InQueue' order by t.addQueueDate";
+        List<IncomeTicket> tickets = entityManager.createQuery(queryText).getResultList();
+        Set<Service> availableServices = getServicesForMaster(master);
+        for (int i = 0; i < tickets.size(); i++) {
+            if (!availableServices.contains(tickets.get(i).getService())) {
+                tickets.remove(tickets.get(i));
+                --i;
+            }
+        }
+
+        if (tickets.size() > 0) {
+            return tickets.get(0);
+        }
+        return null;
+    }
+
+    public Set<Service> getServicesForMaster(Master master) {
+        Query query = entityManager.createQuery("select w.services from Workshop w where :master member of w.masters");
+        query.setParameter("master", master);
+        return new HashSet<Service>((List<Service>) query.getResultList());
     }
 
     public Long getServicesSumCost() {
