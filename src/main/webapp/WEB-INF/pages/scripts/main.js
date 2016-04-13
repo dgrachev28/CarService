@@ -127,6 +127,8 @@ $(document).ready(function() {
                 //Add masters
                 masters = workshops[i].masters;
                 markupMasters = markupWorkshop.find("." + classes.workshopMasters);
+                markupMasters.html("");
+
                 for (j = 0; j < masters.length; ++j) {
                     markupMasters.append(getMasterMarkup(masters[j].id, masters[j].name, masters[j].busy));
                 }
@@ -190,28 +192,40 @@ $(document).ready(function() {
             $("#queueLength" + queueLength[i].id).html(queueLength[i].length);
         }
 
-        var salaries = statistics.salaries;
+        var mastersIncome = statistics.mastersIncome;
         var servicesNumber = statistics.servicesNumber;
+        var key;
 
 
-        if (statisticsEmpty) {
-            statisticsEmpty = false;
+        if (statisticEmpty) {
+            statisticEmpty = false;
 
-            for (i = 0; i < salaries.length; ++i) {
-                $("#salaries").append(getStatisticBlockMarkup("masterSalary" + salaries[i].id, salaries[i].name, salaries[i].salary));
+            $("#salaries").html("");
+            $("#servicesNumber").html("");
+
+            for (key in mastersIncome) {
+                if (mastersIncome.hasOwnProperty(key)) {
+                    $("#salaries").append(getStatisticBlockMarkup("masterSalary" + key, key, mastersIncome[key]));
+                }
             }
 
-            for (i = 0; i < servicesNumber.length; ++i) {
-                $("#servicesNumber").append(getStatisticBlockMarkup("serviceNumber" + servicesNumber[i].id, servicesNumber[i].name, servicesNumber[i].number));
+            for (key in servicesNumber) {
+                if (servicesNumber.hasOwnProperty(key)) {
+                    $("#servicesNumber").append(getStatisticBlockMarkup("serviceNumber" + key, key, servicesNumber[key]));
+                }
             }
 
         } else {
-            for (i = 0; i < salaries.length; ++i) {
-                $("#masterSalary" + salaries[i].id).html(salaries[i].salary);
+            for (key in mastersIncome) {
+                if (mastersIncome.hasOwnProperty(key)) {
+                    $("#masterSalary" + key).html(mastersIncome[key]);
+                }
             }
 
-            for (i = 0; i < servicesNumber.length; ++i) {
-                $("#serviceNumber" + servicesNumber[i].id).html(servicesNumber[i].number);
+            for (key in servicesNumber) {
+                if (servicesNumber.hasOwnProperty(key)) {
+                    $("#serviceNumber" + key).html(servicesNumber[key]);
+                }
             }
         }
     }
