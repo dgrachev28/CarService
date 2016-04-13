@@ -132,7 +132,7 @@ $(document).ready(function() {
 
             newValue = (oldValue * iterationsNumber + currentQueueLength) / (iterationsNumber + 1);
 
-            averageQueueLength["queueLength" + id] = newValue;
+            averageQueueLength["queueLength" + id] = Math.round(newValue);
 
             ++averageQueueLength.iterationsNumber;
 
@@ -226,36 +226,18 @@ $(document).ready(function() {
         var servicesNumber = statistics.servicesNumber;
         var key;
 
+        $("#salaries").html("");
+        $("#servicesNumber").html("");
 
-        if (statisticEmpty) {
-            statisticEmpty = false;
-
-            $("#salaries").html("");
-            $("#servicesNumber").html("");
-
-            for (key in mastersIncome) {
-                if (mastersIncome.hasOwnProperty(key)) {
-                    $("#salaries").append(getStatisticBlockMarkup("masterSalary" + key, key, mastersIncome[key]));
-                }
+        for (key in mastersIncome) {
+            if (mastersIncome.hasOwnProperty(key)) {
+                $("#salaries").append(getStatisticBlockMarkup(key, mastersIncome[key]));
             }
+        }
 
-            for (key in servicesNumber) {
-                if (servicesNumber.hasOwnProperty(key)) {
-                    $("#servicesNumber").append(getStatisticBlockMarkup("serviceNumber" + key, key, servicesNumber[key]));
-                }
-            }
-
-        } else {
-            for (key in mastersIncome) {
-                if (mastersIncome.hasOwnProperty(key)) {
-                    $("#masterSalary" + key).html(mastersIncome[key]);
-                }
-            }
-
-            for (key in servicesNumber) {
-                if (servicesNumber.hasOwnProperty(key)) {
-                    $("#serviceNumber" + key).html(servicesNumber[key]);
-                }
+        for (key in servicesNumber) {
+            if (servicesNumber.hasOwnProperty(key)) {
+                $("#servicesNumber").append(getStatisticBlockMarkup(key, servicesNumber[key]));
             }
         }
     }
@@ -283,11 +265,11 @@ $(document).ready(function() {
     }
 
 
-    function getStatisticBlockMarkup(id, param, value) {
+    function getStatisticBlockMarkup(param, value) {
     // Helpers
         return '<div class="statistic__block">' +
             '<div class="statistic__param">' + param + '</div>' +
-            '<div class="statistic__value" id="' + id + '">' + value + '</div>' +
+            '<div class="statistic__value">' + value + '</div>' +
             '</div>';
     }
 
