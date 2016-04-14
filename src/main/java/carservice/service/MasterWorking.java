@@ -36,8 +36,11 @@ public class MasterWorking extends Thread {
     @Autowired
     private ServletContext servletContext;
 
-    public static final int RUN_TIME_DEFLECTION_PERCENTS = 20;
+    private static int runTimeDeflectionPercents;
 
+    public static void setRunTimeDeflectionPercents(int deflection) {
+        runTimeDeflectionPercents = deflection;
+    }
 
     public void init(IncomeTicket incomeTicket) {
         this.incomeTicket = incomeTicket;
@@ -61,7 +64,7 @@ public class MasterWorking extends Thread {
     }
 
     private double generateRandomRatio() {
-        double randomDeflection = new Random().nextInt(2 * RUN_TIME_DEFLECTION_PERCENTS + 1) - RUN_TIME_DEFLECTION_PERCENTS;
+        double randomDeflection = new Random().nextInt(2 * runTimeDeflectionPercents + 1) - runTimeDeflectionPercents;
         return 1 + randomDeflection / 100;
     }
 
@@ -73,7 +76,6 @@ public class MasterWorking extends Thread {
         IncomeTicket firstTicket = incomeTicketDAO.getFirstTicketInQueue(incomeTicket.getMaster());
         if (firstTicket == null) {
             masterDAO.setMasterBusy(incomeTicket.getMaster().getId(), false);
-
         } else {
             incomeTicketDAO.setTicketMaster(firstTicket.getId(), incomeTicket.getMaster());
             incomeTicketDAO.setTicketStatus(firstTicket.getId(), "InProcess");

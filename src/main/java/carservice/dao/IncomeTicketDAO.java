@@ -1,7 +1,6 @@
 package carservice.dao;
 
 import carservice.domain.*;
-import org.hibernate.mapping.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 import java.util.Calendar;
 import java.util.List;
@@ -73,8 +71,10 @@ public class IncomeTicketDAO {
         String queryText = "select t from IncomeTicket t where t.status like 'InQueue' order by t.addQueueDate";
         List<IncomeTicket> tickets = entityManager.createQuery(queryText).getResultList();
         Set<Service> availableServices = getServicesForMaster(master);
+        Set<String> carsInProcess = getCarsInProcess();
         for (int i = 0; i < tickets.size(); i++) {
-            if (!availableServices.contains(tickets.get(i).getService())) {
+            if (!availableServices.contains(tickets.get(i).getService()) ||
+                    carsInProcess.contains(tickets.get(i).getClient().getCarId())) {
                 tickets.remove(tickets.get(i));
                 --i;
             }
@@ -84,6 +84,12 @@ public class IncomeTicketDAO {
             return tickets.get(0);
         }
         return null;
+    }
+
+    public Set<String> getCarsInProcess() {
+        Query query = entityManager.createQuery(
+                "select t.client.carId from IncomeTicket t where t.status like 'InProcess'");
+        return new HashSet<String>((List<String>) query.getResultList());
     }
 
     public Set<Service> getServicesForMaster(Master master) {

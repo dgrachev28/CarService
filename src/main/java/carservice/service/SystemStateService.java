@@ -32,6 +32,11 @@ public class SystemStateService {
     @Transactional
     public void startApplication(Integer[] mastersCounts, Integer minIntervalMinutes,
                                  Integer maxIntervalMinutes, Integer timeCoefficient) {
+
+        if (systemStateDAO.getSystemState().getStatus() == Status.RUNNING) {
+            return;
+        }
+
         WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         TicketGenerator ticketGenerator = (TicketGenerator) context.getBean("ticketGenerator");
         ticketGenerator.start();
@@ -39,6 +44,10 @@ public class SystemStateService {
         for (int i = 0; i < mastersCounts.length; i++) {
             masterDAO.replaceWorkshopMasters(i + 1, masterNamesStore.getMasters(mastersCounts[i]));
         }
+
+        TicketGenerator.setMaxIntervalMinutes(maxIntervalMinutes);
+        TicketGenerator.setMinIntervalMinutes(minIntervalMinutes);
+        MasterWorking.setRunTimeDeflectionPercents(timeCoefficient);
 
 
     }

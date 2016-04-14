@@ -29,7 +29,7 @@ public class ViewController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/startApplication")
-    public String startQueueThread(@RequestParam Integer masterCount1,
+    public String startApplication(@RequestParam Integer masterCount1,
                                    @RequestParam Integer masterCount2,
                                    @RequestParam Integer masterCount3,
                                    @RequestParam Integer masterCount4,

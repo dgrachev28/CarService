@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     var classes = {
         workshop: "workshop",
@@ -18,7 +18,6 @@ $(document).ready(function() {
     };
 
 
-
     var timerId,
         timerDelay,
         statisticEmpty,
@@ -31,10 +30,8 @@ $(document).ready(function() {
         $stopButton,
         averageQueueLength,
 
-        //RUNNING / STOPPED / PAUSED
+    //RUNNING / STOPPED / PAUSED
         processState;
-
-
 
 
     function initVars() {
@@ -71,7 +68,6 @@ $(document).ready(function() {
     }
 
 
-
     function pauseClickHandler() {
         if (!$(this).hasClass(classes.disabled)) {
             if (processState == "PAUSED") {
@@ -86,19 +82,27 @@ $(document).ready(function() {
 
 
     function settingsClickHandler(e) {
-        if($(e.target).hasClass("setting-panel__button_settings")) {
+        if ($(e.target).hasClass("setting-panel__button_settings")) {
             $settingsButton.toggleClass("_opened");
         }
     }
 
     function startClickHandler() {
-        startApplication();
+        if (!$(this).hasClass(classes.disabled)) {
+            startApplication();
+            $(this).addClass(classes.disabled);
+            $stopButton.removeClass(classes.disabled);
+            $pauseButton.removeClass(classes.disabled);
+        }
     }
 
 
     function stopClickHandler() {
         if (!$(this).hasClass(classes.disabled)) {
             stopApplication();
+            $(this).addClass(classes.disabled);
+            $pauseButton.addClass(classes.disabled);
+            $startButton.removeClass(classes.disabled);
         }
     }
 
@@ -111,7 +115,6 @@ $(document).ready(function() {
             updateTime(data.currentDateTime);
         }
     }
-
 
 
     function countAverageQueueLength(workshops) {
@@ -195,11 +198,10 @@ $(document).ready(function() {
             for (j = 0; j < queue.length; ++j) {
                 var date = new Date(queue[j].addQueueDate);
                 markupQueue.append(getQueueItemMarkup(queue[j].id, queue[j].client.carId, queue[j].service.name,
-                                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), queue[j].status));
+                    date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"), queue[j].status));
             }
         }
     }
-
 
 
     function updateStatistics(statistics) {
@@ -209,7 +211,7 @@ $(document).ready(function() {
         $("#profit").html(statistics.profit);
         $("#servedCar").html(statistics.servedCarCount);
 
-        for(i = 1; i <= 4; ++i) {
+        for (i = 1; i <= 4; ++i) {
             $("#queueLength" + i).html(Math.round(averageQueueLength["queueLength" + i]));
         }
 
@@ -234,7 +236,6 @@ $(document).ready(function() {
     }
 
 
-
     function updateTime(currentDateTime) {
         var date = new Date(currentDateTime);
         $("#current-time").html(date.customFormat("#D# #MMM# #YYYY# &nbsp; &nbsp; &nbsp; #hhh#:#mm#"));
@@ -257,7 +258,7 @@ $(document).ready(function() {
 
 
     function getStatisticBlockMarkup(param, value) {
-    // Helpers
+        // Helpers
         return '<div class="statistic__block">' +
             '<div class="statistic__param">' + param + '</div>' +
             '<div class="statistic__value">' + value + '</div>' +
@@ -277,15 +278,15 @@ $(document).ready(function() {
             '<span class="workshop-queue__item-number">' + number + '</span>' +
             '<span class="workshop-queue__item-service">' + service + '</span>' +
             '<span class="workshop-queue__item-date">' + date + '</span>' +
-        '</li>';
+            '</li>';
     }
 
     function getMasterMarkup(id, name, busy) {
-        if(busy) {
+        if (busy) {
             return '<li class="workshop-masters__item" + id="master' + id + '">' +
-                    '<span class="workshop-masters__item-name">' + name + '</span>' +
-                    '<span class="workshop-masters__item-work">занят</span>' +
-                    '</li>';
+                '<span class="workshop-masters__item-name">' + name + '</span>' +
+                '<span class="workshop-masters__item-work">занят</span>' +
+                '</li>';
         } else {
             return '<li class="workshop-masters__item" + id="master' + id + '">' +
                 '<span class="workshop-masters__item-name">' + name + '</span>' +
@@ -316,7 +317,6 @@ $(document).ready(function() {
     }
 
 
-
     // Получение данных с сервера
     function receive() {
         $.ajax({
@@ -324,7 +324,7 @@ $(document).ready(function() {
             url: '/getCurrentState',
             accepts: "application/json; charset=utf-8",
             data: {},
-            success: function(data) {
+            success: function (data) {
                 updateContent(data);
             }
         });
@@ -345,7 +345,7 @@ $(document).ready(function() {
             method: 'GET',
             url: '/startApplication',
             data: extractSettings(),
-            success: function(data) {
+            success: function (data) {
                 initVars();
                 timerStart();
             }
@@ -353,17 +353,15 @@ $(document).ready(function() {
     }
 
 
-    function stopApplication(callback) {
+    function stopApplication() {
         $.ajax({
             method: 'GET',
             url: '/stopApplication',
             data: {},
-            success: function() {
-                if(callback) {
-                    clearMarkup();
-                    processState = "STOPPED";
-                    callback();
-                }
+            success: function () {
+                clearTimeout(timerId);
+                clearMarkup();
+                processState = "STOPPED";
             }
         });
     }
@@ -384,25 +382,22 @@ $(document).ready(function() {
 });
 
 
-
-
-
-Date.prototype.customFormat = function(formatString){
-    var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
-    YY = ((YYYY=this.getFullYear())+"").slice(-2);
-    MM = (M=this.getMonth()+1)<10?('0'+M):M;
-    MMM = (MMMM=["January","February","March","April","May","June","July","August","September","October","November","December"][M-1]).substring(0,3);
-    DD = (D=this.getDate())<10?('0'+D):D;
-    DDD = (DDDD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][this.getDay()]).substring(0,3);
-    th=(D>=10&&D<=20)?'th':((dMod=D%10)==1)?'st':(dMod==2)?'nd':(dMod==3)?'rd':'th';
-    formatString = formatString.replace("#YYYY#",YYYY).replace("#YY#",YY).replace("#MMMM#",MMMM).replace("#MMM#",MMM).replace("#MM#",MM).replace("#M#",M).replace("#DDDD#",DDDD).replace("#DDD#",DDD).replace("#DD#",DD).replace("#D#",D).replace("#th#",th);
-    h=(hhh=this.getHours());
-    if (h==0) h=24;
-    if (h>12) h-=12;
-    hh = h<10?('0'+h):h;
-    hhhh = h<10?('0'+hhh):hhh;
-    AMPM=(ampm=hhh<12?'am':'pm').toUpperCase();
-    mm=(m=this.getMinutes())<10?('0'+m):m;
-    ss=(s=this.getSeconds())<10?('0'+s):s;
-    return formatString.replace("#hhhh#",hhhh).replace("#hhh#",hhh).replace("#hh#",hh).replace("#h#",h).replace("#mm#",mm).replace("#m#",m).replace("#ss#",ss).replace("#s#",s).replace("#ampm#",ampm).replace("#AMPM#",AMPM);
+Date.prototype.customFormat = function (formatString) {
+    var YYYY, YY, MMMM, MMM, MM, M, DDDD, DDD, DD, D, hhhh, hhh, hh, h, mm, m, ss, s, ampm, AMPM, dMod, th;
+    YY = ((YYYY = this.getFullYear()) + "").slice(-2);
+    MM = (M = this.getMonth() + 1) < 10 ? ('0' + M) : M;
+    MMM = (MMMM = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][M - 1]).substring(0, 3);
+    DD = (D = this.getDate()) < 10 ? ('0' + D) : D;
+    DDD = (DDDD = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][this.getDay()]).substring(0, 3);
+    th = (D >= 10 && D <= 20) ? 'th' : ((dMod = D % 10) == 1) ? 'st' : (dMod == 2) ? 'nd' : (dMod == 3) ? 'rd' : 'th';
+    formatString = formatString.replace("#YYYY#", YYYY).replace("#YY#", YY).replace("#MMMM#", MMMM).replace("#MMM#", MMM).replace("#MM#", MM).replace("#M#", M).replace("#DDDD#", DDDD).replace("#DDD#", DDD).replace("#DD#", DD).replace("#D#", D).replace("#th#", th);
+    h = (hhh = this.getHours());
+    if (h == 0) h = 24;
+    if (h > 12) h -= 12;
+    hh = h < 10 ? ('0' + h) : h;
+    hhhh = h < 10 ? ('0' + hhh) : hhh;
+    AMPM = (ampm = hhh < 12 ? 'am' : 'pm').toUpperCase();
+    mm = (m = this.getMinutes()) < 10 ? ('0' + m) : m;
+    ss = (s = this.getSeconds()) < 10 ? ('0' + s) : s;
+    return formatString.replace("#hhhh#", hhhh).replace("#hhh#", hhh).replace("#hh#", hh).replace("#h#", h).replace("#mm#", mm).replace("#m#", m).replace("#ss#", ss).replace("#s#", s).replace("#ampm#", ampm).replace("#AMPM#", AMPM);
 };

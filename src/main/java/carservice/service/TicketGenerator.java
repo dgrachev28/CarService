@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import javax.transaction.TransactionManager;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.Set;
 
 @Service
 @Scope("prototype")
@@ -39,9 +40,23 @@ public class TicketGenerator extends Thread {
     @Autowired
     private SystemTimer systemTimer;
 
-    public static final int RANDOM_INTERVAL_START_MINUTES = 5;
-    public static final int RANDOM_INTERVAL_END_MINUTES = 15;
-    public static final int RANDOM_PERIOD_MINUTES = RANDOM_INTERVAL_END_MINUTES - RANDOM_INTERVAL_START_MINUTES;
+    private static int minIntervalMinutes;
+    private static int maxIntervalMinutes;
+    private static int randomPeriodMinutes;
+
+    public static void setMinIntervalMinutes(int interval) {
+        minIntervalMinutes = interval;
+        setRandomPeriodMinutes();
+    }
+
+    public static void setMaxIntervalMinutes(int interval) {
+        maxIntervalMinutes = interval;
+        setRandomPeriodMinutes();
+    }
+
+    private static void setRandomPeriodMinutes() {
+        randomPeriodMinutes = maxIntervalMinutes - minIntervalMinutes;
+    }
 
 
     public TicketGenerator() {
@@ -61,6 +76,7 @@ public class TicketGenerator extends Thread {
             e.printStackTrace();
         }
     }
+
     @Transactional
     private void generateTicket() {
         Client client = generateClient();
@@ -98,11 +114,13 @@ public class TicketGenerator extends Thread {
 
         Master freeMaster = getFreeMasterInWorkshop(workshop);
 
+        Set<String> carsInProcess = incomeTicketDAO.getCarsInProcess();
+
         IncomeTicket incomeTicket = new IncomeTicket();
         incomeTicket.setClient(client);
         incomeTicket.setService(service);
         incomeTicket.setAddQueueDate(systemTimer.getCurrentDateTime());
-        if (freeMaster == null) {
+        if (freeMaster == null || carsInProcess.contains(client.getCarId())) {
             incomeTicket.setStatus("InQueue");
         } else {
             masterDAO.setMasterBusy(freeMaster.getId(), true);
@@ -114,9 +132,6 @@ public class TicketGenerator extends Thread {
             MasterWorking masterWorking = (MasterWorking) context.getBean("masterWorking");
             masterWorking.init(incomeTicket);
             masterWorking.start();
-
-//            MasterWorking masterWorking = new MasterWorking(incomeTicket, systemTimer, workshopDAO, incomeTicketDAO, masterDAO);
-//            masterWorking.start();
 
         }
         incomeTicketDAO.insertIncomeTicket(workshop.getId(), incomeTicket);
@@ -150,7 +165,7 @@ public class TicketGenerator extends Thread {
     }
 
     private int getRandomTicketInterval() {
-        int randomValueMinutes = (int) (RANDOM_INTERVAL_START_MINUTES + new Random().nextDouble() * RANDOM_PERIOD_MINUTES);
+        int randomValueMinutes = (int) (minIntervalMinutes + new Random().nextDouble() * randomPeriodMinutes);
         int result = systemTimer.minutesToMilliSeconds(systemTimer.convertWorkTime(randomValueMinutes));
         result /= SystemTimer.TIME_SCALE;
         System.out.println(result);
