@@ -12,26 +12,21 @@ $(document).ready(function() {
 
     var id = {
         settingsButton: "settings-button",
-        restartButton: "restart-button",
+        startButton: "start-button",
         pauseButton: "pause-button",
         stopButton: "stop-button"
     };
 
 
 
-    var constants = {
-        TIMER_DELAY: 300
-    };
-
-
-
     var timerId,
+        timerDelay,
         statisticEmpty,
         workshopsEmpty,
         $contentButton,
         $workshop,
         $settingsButton,
-        $restartButton,
+        $startButton,
         $pauseButton,
         $stopButton,
         averageQueueLength,
@@ -44,6 +39,8 @@ $(document).ready(function() {
 
     function initVars() {
 
+        timerDelay = extractOneSetting($("#settings-step"));
+
         statisticEmpty = true;
         workshopsEmpty = true;
 
@@ -52,7 +49,7 @@ $(document).ready(function() {
         $contentButton = $("." + classes.contentButton);
         $workshop = $("." + classes.workshop);
         $settingsButton = $("#" + id.settingsButton);
-        $restartButton = $("#" + id.restartButton);
+        $startButton = $("#" + id.startButton);
         $pauseButton = $("#" + id.pauseButton);
         $stopButton = $("#" + id.stopButton);
 
@@ -69,7 +66,7 @@ $(document).ready(function() {
     function bindEvents() {
         $pauseButton.on("click", pauseClickHandler);
         $settingsButton.on("click", settingsClickHandler);
-        $restartButton.on("click", restartClickHandler);
+        $startButton.on("click", startClickHandler);
         $stopButton.on("click", stopClickHandler);
     }
 
@@ -94,12 +91,8 @@ $(document).ready(function() {
         }
     }
 
-    function restartClickHandler() {
-        if (processState == "RUNNING" || processState == "PAUSED") {
-            stopApplication(startApplication);
-        } else {
-            startApplication();
-        }
+    function startClickHandler() {
+        startApplication();
     }
 
 
@@ -132,7 +125,7 @@ $(document).ready(function() {
 
             newValue = (oldValue * iterationsNumber + currentQueueLength) / (iterationsNumber + 1);
 
-            averageQueueLength["queueLength" + id] = Math.round(newValue);
+            averageQueueLength["queueLength" + id] = newValue;
 
             ++averageQueueLength.iterationsNumber;
 
@@ -216,11 +209,9 @@ $(document).ready(function() {
         $("#profit").html(statistics.profit);
         $("#servedCar").html(statistics.servedCarCount);
 
-        $("#queueLength1").html(averageQueueLength.queueLength1);
-        $("#queueLength2").html(averageQueueLength.queueLength2);
-        $("#queueLength3").html(averageQueueLength.queueLength3);
-        $("#queueLength4").html(averageQueueLength.queueLength4);
-
+        for(i = 1; i <= 4; ++i) {
+            $("#queueLength" + i).html(Math.round(averageQueueLength["queueLength" + i]));
+        }
 
         var mastersIncome = statistics.mastersIncome;
         var servicesNumber = statistics.servicesNumber;
@@ -321,7 +312,6 @@ $(document).ready(function() {
         settings.minIntervalMinutes = extractOneSetting($("#settings-min-interval"));
         settings.maxIntervalMinutes = extractOneSetting($("#settings-max-interval"));
         settings.timeCoefficient = extractOneSetting($("#settings-coefficient"));
-        // settings.modelingStep = extractOneSetting($("#settings-step"));
         return settings;
     }
 
@@ -345,8 +335,8 @@ $(document).ready(function() {
     function timerStart() {
         timerId = setTimeout(function tick() {
             receive();
-            timerId = setTimeout(tick, constants.TIMER_DELAY);
-        }, constants.TIMER_DELAY);
+            timerId = setTimeout(tick, timerDelay);
+        }, timerDelay);
     }
 
 

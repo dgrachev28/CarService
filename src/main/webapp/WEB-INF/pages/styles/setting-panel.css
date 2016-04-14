@@ -50,13 +50,13 @@
 
 
 
-.setting-panel__button_restart {
+.setting-panel__button_start {
     border: 1px solid #0b7d05;
     background-color: #15b80d;
     border-bottom: none;
 }
 
-.setting-panel__button_restart:hover {
+.setting-panel__button_start:hover {
     background-color: #168509;
 }
 

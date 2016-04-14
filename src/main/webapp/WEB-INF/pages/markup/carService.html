@@ -91,16 +91,16 @@
                     </div>
                     <div class="setting-panel__atributes-panel-row">
                         <div class="setting-panel__atributes-panel-label">
-                            Шаг моделирования, часы
-                            <span class="setting-panel__atributes-panel-sublabel">(от 0.1 до 8)</span>
+                            Частота обновления, мс
+                            <span class="setting-panel__atributes-panel-sublabel">(от 300 до 10000)</span>
                         </div>
                         <div class="setting-panel__atributes-panel-value">
-                            <input type="number" min="0.1" max="8" value="0.5" onblur="numberValidator(this)" defaultValue="0.5" id="settings-step"/>
+                            <input type="number" min="300" max="10000" value="300" onblur="numberValidator(this)" defaultValue="300" id="settings-step"/>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="setting-panel__button setting-panel__button_restart" id="restart-button">restart</div>
+            <div class="setting-panel__button setting-panel__button_start" id="start-button">start</div>
             <div class="setting-panel__button setting-panel__button_pause" id="pause-button">pause</div>
             <div class="setting-panel__button setting-panel__button_stop" id="stop-button">stop</div>
             <div class="setting-panel__time" id="current-time">11 Jan 2016 12:15</div>
@@ -190,32 +190,34 @@
                     </div>
                     <div class="statistic__big-block">
                         <div class="statistic__big-block-title">Средняя длина очередей</div>
-                        <div class="statistic__block">
-                            <div class="statistic__param">Цех 1 (техосмотр)</div>
-                            <div class="statistic__value" id="queueLength1"></div>
-                        </div>
-                        <div class="statistic__block">
-                            <div class="statistic__param">Цех 2 (кузовной ремонт)</div>
-                            <div class="statistic__value" id="queueLength2"></div>
-                        </div>
-                        <div class="statistic__block">
-                            <div class="statistic__param">Цех 3 (шиномонтаж)</div>
-                            <div class="statistic__value" id="queueLength3"></div>
-                        </div>
-                        <div class="statistic__block">
-                            <div class="statistic__param">Цех 4 (ремонт двигателя)</div>
-                            <div class="statistic__value" id="queueLength4"></div>
+                        <div class="statistic__big-block-value">
+                            <div class="statistic__block">
+                                <div class="statistic__param">Цех 1 (техосмотр)</div>
+                                <div class="statistic__value" id="queueLength1"></div>
+                            </div>
+                            <div class="statistic__block">
+                                <div class="statistic__param">Цех 2 (кузовной ремонт)</div>
+                                <div class="statistic__value" id="queueLength2"></div>
+                            </div>
+                            <div class="statistic__block">
+                                <div class="statistic__param">Цех 3 (шиномонтаж)</div>
+                                <div class="statistic__value" id="queueLength3"></div>
+                            </div>
+                            <div class="statistic__block">
+                                <div class="statistic__param">Цех 4 (ремонт двигателя)</div>
+                                <div class="statistic__value" id="queueLength4"></div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="statistic__big-block">
                         <div class="statistic__big-block-title">Зарплата мастеров</div>
-                        <div class="statistic__big-block-title" id="salaries"></div>
+                        <div class="statistic__big-block-value" id="salaries"></div>
                     </div>
 
                     <div class="statistic__big-block">
                         <div class="statistic__big-block-title">Общее число услуг</div>
-                        <div class="statistic__big-block-title" id="servicesNumber"></div>
+                        <div class="statistic__big-block-value" id="servicesNumber"></div>
                     </div>
 
                 </div>
