@@ -1,3 +1,4 @@
-The OpenShift `jbossews` cartridge documentation can be found at:
+Реализация моделирования работы автосервиса.
 
-http://openshift.github.io/documentation/oo_cartridge_guide.html#tomcat
+Проект сделан в виде клиент-серверного приложения.
+Средства, используемые в проекте: Java, Spring, Hibernate, Maven, JQuery, MySQL, Apache Tomcat
